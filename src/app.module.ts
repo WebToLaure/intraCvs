@@ -5,8 +5,27 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
+
+import { PresentationsModule } from './presentations/presentations.module';
+import { Presentation } from './presentations/entities/presentation.entity';
+
+import { ExperiencesModule } from './experiences/experiences.module';
+import { Experience } from './experiences/entities/experience.entity';
+
+import { FormationsModule } from './formations/formations.module';
+import { Formation } from './formations/entities/formation.entity';
+
+import { CompetencesModule } from './competences/competences.module';
+import { Competence } from './competences/entities/competence.entity';
+
+import { LanguesModule } from './langues/langues.module';
+import { Langue } from './langues/entities/langue.entity';
+
+import { CentresInteretsModule } from './centres_interets/centres_interets.module';
+import { CentresInteret } from './centres_interets/entities/centres_interet.entity';
 
 @Module({
   imports: [
@@ -18,12 +37,18 @@ import { User } from './users/entities/user.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User],
+      entities: [User,Presentation,Experience,Formation, Competence,Langue,CentresInteret],
       synchronize: true,
       logging: false
     }),
     AuthModule,
     UsersModule,
+    PresentationsModule,
+    ExperiencesModule,
+    FormationsModule,
+    CompetencesModule,
+    LanguesModule,
+    CentresInteretsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

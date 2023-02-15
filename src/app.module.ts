@@ -39,7 +39,7 @@ import { CentresInteret } from './centres_interets/entities/centres_interet.enti
       database: process.env.DB_NAME,
       entities: [User,Presentation,Experience,Formation, Competence,Langue,CentresInteret],
       synchronize: true,
-      logging: false
+      logging: true
     }),
     AuthModule,
     UsersModule,

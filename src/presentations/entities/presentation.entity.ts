@@ -21,6 +21,6 @@ export class Presentation extends BaseEntity {
 
 
  @ApiProperty({ type: () => Presentation })
-    @OneToOne(() => User, (user) => user.presentation, { eager: true })
+    @OneToOne(() => User, (user) => user.presentation)
     user: User
 }

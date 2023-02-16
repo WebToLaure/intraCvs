@@ -18,6 +18,11 @@ export class CreateUserDto {
     @IsNotEmpty()
     @IsEmail()
     email: string;
+    
+    /* @ApiProperty()
+    @IsNotEmpty()
+    @IsEmail()
+    telephone: string; */
 
     @ApiProperty()
     @IsString()

@@ -7,6 +7,7 @@ import { ApiTags, ApiBearerAuth, ApiResponse, ApiOperation } from '@nestjs/swagg
 
 
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -26,7 +27,6 @@ export class UsersController {
   }
 
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   findAll() {
     return this.usersService.findAll();

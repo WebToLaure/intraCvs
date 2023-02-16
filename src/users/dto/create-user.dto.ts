@@ -23,5 +23,22 @@ export class CreateUserDto {
     @IsString()
     @IsNotEmpty()
     password: string;
+    @ApiProperty()
+    @IsString()
+    poste_actuel: string;
+
+    @ApiProperty()
+    @IsString()
+    classe_professionnelle: string;
+
+    @ApiProperty()
+    @IsString()
+    ville_affectation: string;
+
+    @ApiProperty()
+    @IsString()
+    region_affectation: string;
+
+
 
 }

@@ -20,11 +20,16 @@ export class User extends BaseEntity {
     id: number;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         unique: true,
     })
     email: string;
+
+    @ApiProperty()
+    @Column({
+        nullable: true,
+    })
+    telephone: string;
 
     @ApiProperty()
     @Exclude()
@@ -34,7 +39,6 @@ export class User extends BaseEntity {
     password: string;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         length: 50,
         nullable: false
@@ -42,7 +46,6 @@ export class User extends BaseEntity {
     firstname: string;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         length: 50,
         nullable: false

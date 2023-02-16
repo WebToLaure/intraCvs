@@ -26,7 +26,7 @@ export class UsersController {
   }
 
 
-
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   findAll() {
     return this.usersService.findAll();

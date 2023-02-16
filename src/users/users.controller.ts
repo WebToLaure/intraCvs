@@ -20,10 +20,12 @@ export class UsersController {
     if (ExistingUser) {
       throw new HttpException("l'email existe déjà", HttpStatus.NOT_ACCEPTABLE);
     }
-    createUserDto.email = await encodePassword(createUserDto.email)
+    createUserDto.password = await encodePassword(createUserDto.password)
 
     return this.usersService.create(createUserDto);
   }
+
+
 
   @Get()
   findAll() {

@@ -1,5 +1,5 @@
 
-import { BaseEntity, Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne } from "typeorm";
+import { BaseEntity, Entity, Column, PrimaryGeneratedColumn, OneToMany, OneToOne, JoinColumn } from "typeorm";
 import { Exclude } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -9,13 +9,6 @@ import { Competence } from "src/competences/entities/competence.entity";
 import { Formation } from "src/formations/entities/formation.entity";
 import { Langue } from "src/langues/entities/langue.entity";
 import { CentresInteret } from "src/centres_interets/entities/centres_interet.entity";
-
-
-
-
-
-
-
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -88,7 +81,8 @@ export class User extends BaseEntity {
 
     @ApiProperty({ type: () => Presentation })
     @OneToOne(() => Presentation, (presentation) => presentation.user, { eager: true })
-    presentation: Presentation
+    @JoinColumn()
+    presentation: Presentation;
 
 
     @ApiProperty({ type: () => Experience })
@@ -114,13 +108,5 @@ export class User extends BaseEntity {
     @ApiProperty({ type: () => CentresInteret })
     @OneToMany(() => CentresInteret, (centres_interet) => centres_interet.user, { eager: true })
     centres_interets: CentresInteret[]
-
-
-
-
-
-
-
-
 
 }

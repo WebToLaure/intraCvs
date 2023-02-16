@@ -20,7 +20,7 @@ export class Presentation extends BaseEntity {
     A_propos: string;
 
 
- @ApiProperty({ type: () => Presentation })
+    @ApiProperty({ type: () => Presentation })
     @OneToOne(() => User, (user) => user.presentation)
     user: User
 }

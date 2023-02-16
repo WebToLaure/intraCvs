@@ -9,6 +9,7 @@ import { Competence } from "src/competences/entities/competence.entity";
 import { Formation } from "src/formations/entities/formation.entity";
 import { Langue } from "src/langues/entities/langue.entity";
 import { CentresInteret } from "src/centres_interets/entities/centres_interet.entity";
+import { UserRoleEnum } from "src/enum/user-role.enum";
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -78,6 +79,15 @@ export class User extends BaseEntity {
         type: "bytea",
     })
     photo: string;
+
+    @ApiProperty()
+    @Column({
+        type: 'enum',
+        enum: UserRoleEnum,
+        default: UserRoleEnum.USER
+    })
+    @Exclude()
+    role: string;
 
     @ApiProperty({ type: () => Presentation })
     @OneToOne(() => Presentation, (presentation) => presentation.user, { eager: true })

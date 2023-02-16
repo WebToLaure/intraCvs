@@ -16,8 +16,9 @@ export class UsersService {
     return await User.findOneBy({ email });
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    const users = await User.find({relations: {presentation: true}});
+    return users ;
   }
 
   findOne(id: number) {

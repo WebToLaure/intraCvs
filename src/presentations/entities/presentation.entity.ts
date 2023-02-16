@@ -13,14 +13,13 @@ export class Presentation extends BaseEntity {
     id: number;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         nullable: true,
     })
-    A_propos: string;
-
+    name: string;
 
     @ApiProperty({ type: () => Presentation })
     @OneToOne(() => User, (user) => user.presentation)
     user: User
+
 }

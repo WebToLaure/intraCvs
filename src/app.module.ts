@@ -38,7 +38,7 @@ import { CentresInteret } from './centres_interets/entities/centres_interet.enti
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [User,Presentation,Experience,Formation, Competence,Langue,CentresInteret],
-      synchronize: false,
+      synchronize: true,
       logging: false
     }),
     AuthModule,

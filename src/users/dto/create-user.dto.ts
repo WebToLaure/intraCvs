@@ -19,15 +19,15 @@ export class CreateUserDto {
     @IsEmail()
     email: string;
     
-    /* @ApiProperty()
-    @IsNotEmpty()
-    @IsEmail()
-    telephone: string; */
+    @ApiProperty()
+    @IsString()
+    telephone: string;
 
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
     password: string;
+    
     @ApiProperty()
     @IsString()
     poste_actuel: string;

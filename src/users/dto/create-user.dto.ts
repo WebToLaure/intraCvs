@@ -18,6 +18,10 @@ export class CreateUserDto {
     @IsNotEmpty()
     @IsEmail()
     email: string;
+    
+    @ApiProperty()
+    @IsString()
+    telephone: string;
 
     @ApiProperty()
     @IsString()
@@ -27,6 +31,7 @@ export class CreateUserDto {
     @IsString()
     @IsNotEmpty()
     password: string;
+    
     @ApiProperty()
     @IsString()
     poste_actuel: string;

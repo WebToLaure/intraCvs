@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, Request, ParseIntPipe, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, Request, ParseIntPipe, ClassSerializerInterceptor, UseInterceptors, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { encodePassword } from 'src/utils/bcrypt';
@@ -7,6 +7,7 @@ import { ApiTags, ApiBearerAuth, ApiResponse, ApiOperation } from '@nestjs/swagg
 
 
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -22,28 +23,69 @@ export class UsersController {
     }
     createUserDto.password = await encodePassword(createUserDto.password)
 
-    return this.usersService.create(createUserDto);
+    const newAccount = await this.usersService.create(createUserDto);
+    return {
+      statusCode: 201,
+      message: "Création réussie d'un nouveau compte",
+      data: newAccount
+    }
   }
-
 
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll() {
+    const allUsers = await this.usersService.findAll();
+    return {
+      statusCode: 200,
+      message: "Récupération réussie de tous les users",
+      data: allUsers
+    } ;
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  async findOne(@Param('id') id: number) {
+    const oneUser = await this.usersService.findOne(id);
+    if (!oneUser){
+      throw new BadRequestException('User non trouvé')
+    }
+    return {
+      statusCode: 200,
+      message: `Récupération réussie du user ${id}`,
+      data: oneUser
+    };
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+    
+    const isUserExists = await this.usersService.findOne(id);
+    if (!isUserExists) {
+      throw new BadRequestException('User non trouvée');
+    }
+
+    const updatedUser = await this.usersService.update(id, updateUserDto);
+    return {
+      statusCode: 201,
+      message: 'Modifications enregistrées du user',
+      data: updatedUser
+    }
   }
 
+
+  
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  async remove(@Param('id') id: string) {
+
+    const isUserExists = await this.usersService.findOne(+id);
+    if (!isUserExists) {
+      throw new BadRequestException('User non trouvée');
+    }
+
+    const deletedUser = await isUserExists.remove();
+    return {
+      statusCode: 201,
+      message: 'Suppression enregistrées du user',
+      data: deletedUser
+    }
   }
 }

@@ -20,7 +20,6 @@ export class User extends BaseEntity {
     id: number;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         unique: true,
     })
@@ -38,7 +37,6 @@ export class User extends BaseEntity {
     password: string;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         length: 50,
         nullable: false
@@ -46,7 +44,6 @@ export class User extends BaseEntity {
     firstname: string;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         length: 50,
         nullable: false
@@ -91,7 +88,7 @@ export class User extends BaseEntity {
         default: UserRoleEnum.USER
     })
     @Exclude()
-    role: string;
+    role: UserRoleEnum;
 
     @ApiProperty({ type: () => Presentation })
     @OneToOne(() => Presentation, (presentation) => presentation.user, { eager: true })

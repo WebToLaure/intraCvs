@@ -79,7 +79,7 @@ export class UsersService
     const user = await User.remove(id);
 
     if (user) {
-      return `This action removes a #${id} user`;
+      return user;
     }
     return undefined
   }

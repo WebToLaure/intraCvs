@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, Request, ParseIntPipe, ClassSerializerInterceptor, UseInterceptors, BadRequestException, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, Request, ClassSerializerInterceptor, UseInterceptors, BadRequestException, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { encodePassword } from 'src/utils/bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags, ApiBearerAuth, ApiResponse, ApiOperation, ApiProperty } from '@nestjs/swagger';
+import { ApiResponse, ApiOperation, ApiProperty } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 
@@ -62,8 +62,30 @@ export class UsersController
     };
   }
 
-  
   @UseGuards(JwtAuthGuard)
+  @Patch()
+  async updateUser(@Body() updateUserDto: UpdateUserDto,@Request() req){
+
+    const account = req.user.id
+    
+    /* const isUserExists = await this.usersService.findOne(account);
+    if( !isUserExists){
+      throw new HttpException(`L'user demandé n'existe pas`, HttpStatus.NOT_FOUND);
+    } */
+    const updatedUser = await this.usersService.update(account, updateUserDto);
+
+    if (!updatedUser){
+      throw new HttpException('Erreur Server', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return {
+      statusCode: 201,
+      message: 'Modifications enregistrées du user',
+      data: updatedUser
+    };
+  }
+
+  
+  //@UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto)
   {
@@ -75,6 +97,9 @@ export class UsersController
     }
 
     const updatedUser = await this.usersService.update(id, updateUserDto);
+    if (!updatedUser){
+      throw new HttpException('Erreur Server', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
     return {
       statusCode: 201,
       message: 'Modifications enregistrées du user',
@@ -88,9 +113,8 @@ export class UsersController
   @ApiResponse({ status: 200, description: 'Compte supprimé' })
   @Delete()
   @ApiProperty()
-  async removedUser(@Request() req){
+  async removeUser(@Request() req){
     const account = req.user.id
-    console.log(account);
     
     const user = await this.usersService.findOne(account);
     if (!user){

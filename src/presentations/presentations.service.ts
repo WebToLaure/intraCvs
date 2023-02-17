@@ -1,14 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePresentationDto } from './dto/create-presentation.dto';
 import { UpdatePresentationDto } from './dto/update-presentation.dto';
+import { Presentation } from './entities/presentation.entity';
 
 @Injectable()
 export class PresentationsService {
-  create(createPresentationDto: CreatePresentationDto) {
-    return 'This action adds a new presentation';
+  async createPresentation(createPresentationDto: CreatePresentationDto) {
+
+    const presentation = new Presentation()
+    presentation.name = createPresentationDto.name
+    
+    await presentation.save()
+
+    return presentation
   }
 
-  findAll() {
+  findAllPresentation() {
     return `This action returns all presentations`;
   }
 

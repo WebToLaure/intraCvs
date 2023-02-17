@@ -11,12 +11,12 @@ export class PresentationsController {
 
   @Post()
   create(@Body() createPresentationDto: CreatePresentationDto) {
-    return this.presentationsService.create(createPresentationDto);
+    return this.presentationsService.createPresentation(createPresentationDto);
   }
 
   @Get()
   findAll() {
-    return this.presentationsService.findAll();
+    return this.presentationsService.findAllPresentation();
   }
 
   @Get(':id')

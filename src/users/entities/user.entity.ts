@@ -27,6 +27,10 @@ export class User extends BaseEntity {
     email: string;
 
     @ApiProperty()
+    @Column()
+    telephone: string;
+
+    @ApiProperty()
     @Exclude()
     @Column({
         nullable: false,

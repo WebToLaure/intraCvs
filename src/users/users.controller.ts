@@ -45,6 +45,9 @@ export class UsersController {
   @Get(':id')
   async findOne(@Param('id') id: number) {
     const oneUser = await this.usersService.findOne(id);
+    if (!oneUser){
+      throw new BadRequestException('User non trouvé')
+    }
     return {
       statusCode: 200,
       message: `Récupération réussie du user ${id}`,

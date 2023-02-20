@@ -12,14 +12,12 @@ export class Langue extends BaseEntity {
     id: number;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         nullable: true,
     })
     langue: string;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         nullable: true,
     })

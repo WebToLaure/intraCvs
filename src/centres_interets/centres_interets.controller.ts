@@ -52,15 +52,15 @@ export class CentresInteretsController {
   @ApiOperation({ summary: "Modification d'un Centre d'Intérêt " })
   async updateInteret(@Param('id') id: string, @Body() updateCentresIneteretDto: UpdateCentresInteretDto, @Request() req) {
     if (await this.centresInteretsService.findInteretAndUser(req.user.userId, updateCentresIneteretDto.intitule)) {
-      throw new HttpException("Intérêt déjà existant.", HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException("Ce centre d'intérêt existe déjà.", HttpStatus.NOT_ACCEPTABLE);
     }
     const update = await this.centresInteretsService.updateInteret(+id, updateCentresIneteretDto);
-    
-    return  {
-      statusCode:200,
-      message:"votre centre d'intérêt a bien été modifié",
-      data:update
-    } 
+
+    return {
+      statusCode: 200,
+      message: "Modification du centre d'intérêt prise en compte",
+      data: update
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -72,14 +72,14 @@ export class CentresInteretsController {
 
     if (!Interet) {
 
-      throw new HttpException("Intérêt introuvable.", HttpStatus.NOT_FOUND);
+      throw new HttpException("Centre d'intérêt introuvable.", HttpStatus.NOT_FOUND);
     }
 
     if (await this.centresInteretsService.deleteInteret(id)) {
 
-      throw new HttpException("Intérêt supprimée.", HttpStatus.OK);
+      throw new HttpException("Centre d'intérêt supprimée.", HttpStatus.OK);
     }
     throw new HttpException("Suppression impossible.", HttpStatus.BAD_REQUEST);
   }
-  }
+}
 

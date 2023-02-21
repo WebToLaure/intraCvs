@@ -18,7 +18,7 @@ export class FormationsService {
     return await Formation.find();
   }
 
-  async findFormationById(id: number, user:User) {
+  async findFormationById(id: number, user: User) {
     const formation = await Formation.findOne({ relations: { user: true }, where: { id } });
     delete user.password
     if (!formation) {
@@ -39,7 +39,7 @@ export class FormationsService {
 
   async findFormationByName(specialite: string) {
     const findForm = await Formation.findBy({ specialite: ILike(`%${specialite}%`) });
-    if (findForm.length === 0) {  
+    if (findForm.length === 0) {
       return undefined
     }
     return findForm;
@@ -47,7 +47,7 @@ export class FormationsService {
 
 
   async findByFormationAndUser(userId: number, specialite: string) {
-    return await Formation.findOne({ where: { user: { id: userId }, specialite: specialite} });
+    return await Formation.findOne({ where: { user: { id: userId }, specialite: specialite } });
   }
 
 }

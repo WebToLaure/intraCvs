@@ -24,7 +24,7 @@ export class FormationsController {
       throw new HttpException("Formation déjà renseignée", HttpStatus.NOT_ACCEPTABLE);
     }
     const user = await this.usersService.findOne(req.user.userId);
-   
+
 
     return await this.formationsService.createFormation(createFormationDto, user);
   }
@@ -34,14 +34,14 @@ export class FormationsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   @ApiOperation({ summary: "Récupération de l'ensemble des formations des CV utilisateurs" })
-  async findAllForm(){
+  async findAllForm() {
 
-   const allFormations = await this.formationsService.findAllFormations();
-   if(!allFormations){
-    throw new HttpException("aucune formation trouvée", HttpStatus.BAD_REQUEST);
-   }
+    const allFormations = await this.formationsService.findAllFormations();
+    if (!allFormations) {
+      throw new HttpException("aucune formation trouvée", HttpStatus.BAD_REQUEST);
+    }
 
-   return allFormations;
+    return allFormations;
   }
 
 
@@ -49,8 +49,8 @@ export class FormationsController {
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   @ApiOperation({ summary: "Récupération d'une formation sur CV utilisateur par son id" })
-  async findFormationById(@Param('id', ParseIntPipe) id: number, @Request()req) {
-    const formation = await this.formationsService.findFormationById(id,req.user.userId);
+  async findFormationById(@Param('id', ParseIntPipe) id: number, @Request() req) {
+    const formation = await this.formationsService.findFormationById(id, req.user.userId);
     if (!formation) {
       throw new HttpException("cette formation n'existe pas", HttpStatus.BAD_REQUEST);
     }
@@ -76,13 +76,13 @@ export class FormationsController {
     if (await this.formationsService.findByFormationAndUser(req.user.userId, updateFormationDto.specialite)) {
       throw new HttpException("Formation déjà existante.", HttpStatus.NOT_ACCEPTABLE);
     }
-    const update = this.formationsService.update(+id, updateFormationDto);
-    
-    return  {
-      statusCode:200,
-      message:"votre formation a bien été modifiée",
-      data:update
-    } 
+    const update = await this.formationsService.update(+id, updateFormationDto);
+
+    return {
+      statusCode: 200,
+      message: "votre formation a bien été modifiée",
+      data: update
+    }
   }
 
   @UseGuards(JwtAuthGuard)

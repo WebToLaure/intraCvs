@@ -5,6 +5,6 @@ import { UsersService } from 'src/users/users.service';
 
 @Module({
   controllers: [FormationsController],
-  providers: [FormationsService, UsersService ,]
+  providers: [FormationsService, UsersService,]
 })
-export class FormationsModule {}
+export class FormationsModule { }

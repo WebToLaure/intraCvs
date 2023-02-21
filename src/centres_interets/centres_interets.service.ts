@@ -24,7 +24,7 @@ export class CentresInteretsService {
     return findInteret;
   }
 
-  async updateInteret(id: number, updateCentresInteretDto: UpdateCentresInteretDto) {
+  async updateInteret(id: number, updateCentresInteretDto: UpdateCentresInteretDto){
     const interet = await CentresInteret.findOneBy({ id });
     if (updateCentresInteretDto.intitule) interet.intitule = updateCentresInteretDto.intitule;
     return await interet.save ();

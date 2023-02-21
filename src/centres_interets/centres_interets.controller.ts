@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, UseGuards, Request, HttpException, HttpStatus, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, UseGuards, Request, HttpException, HttpStatus, ParseIntPipe, Bind } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiBody, ApiTags, ApiOperation } from '@nestjs/swagger';
 import { CentresInteretsService } from './centres_interets.service';
@@ -53,13 +53,14 @@ export class CentresInteretsController {
   async updateInteret(@Param('id') id: string, @Body() updateCentresIneteretDto: UpdateCentresInteretDto, @Request() req) {
     const update = this.centresInteretsService.updateInteret(+id, updateCentresIneteretDto);
     if (await this.centresInteretsService.findInteretAndUser(req.user.userId, updateCentresIneteretDto.intitule)) {
-      throw new HttpException("Interet déjà existant.", HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException("Intérêt déjà existant.", HttpStatus.NOT_ACCEPTABLE);
     }
     return  {
       statusCode:200,
+      data:update,
       message:"votre centre d'intérêt a bien été modifié",
-      data:update[0],
-    } 
+      
+    }  
   }
 
   @UseGuards(JwtAuthGuard)
@@ -76,7 +77,7 @@ export class CentresInteretsController {
 
     if (await this.centresInteretsService.deleteInteret(id)) {
 
-      throw new HttpException("Formation supprimée.", HttpStatus.OK);
+      throw new HttpException("Centre Intérêt supprimée.", HttpStatus.OK);
     }
     throw new HttpException("Suppression impossible.", HttpStatus.BAD_REQUEST);
   }

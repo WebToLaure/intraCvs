@@ -55,7 +55,11 @@ export class CentresInteretsController {
     if (await this.centresInteretsService.findInteretAndUser(req.user.userId, updateCentresIneteretDto.intitule)) {
       throw new HttpException("Interet déjà existant.", HttpStatus.NOT_ACCEPTABLE);
     }
-    return update;
+    return  {
+      statusCode:200,
+      message:"votre centre d'intérêt a bien été modifié",
+      data:update[0],
+    } 
   }
 
   @UseGuards(JwtAuthGuard)

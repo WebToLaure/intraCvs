@@ -1,5 +1,5 @@
 
-import { BaseEntity, Entity, Column, PrimaryGeneratedColumn, ManyToOne} from "typeorm";
+import { BaseEntity, Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import { Exclude } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/users/entities/user.entity";
@@ -12,7 +12,6 @@ export class CentresInteret extends BaseEntity {
     id: number;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         nullable: true,
     })

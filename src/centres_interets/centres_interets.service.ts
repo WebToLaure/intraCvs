@@ -35,8 +35,6 @@ export class CentresInteretsService {
 
   }
 
-
-
   async findInteretAndUser(userId: number, intitule: string) {
     return await CentresInteret.findOne({ where: { user: { id: userId }, intitule: intitule } });
   }

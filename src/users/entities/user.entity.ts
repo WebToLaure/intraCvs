@@ -5,11 +5,13 @@ import { ApiProperty } from "@nestjs/swagger";
 
 import { Presentation } from "src/presentations/entities/presentation.entity";
 import { Experience } from "src/experiences/entities/experience.entity";
-import { Competence } from "src/competences/entities/competence.entity";
 import { Formation } from "src/formations/entities/formation.entity";
 import { Langue } from "src/langues/entities/langue.entity";
 import { CentresInteret } from "src/centres_interets/entities/centres_interet.entity";
 import { UserRoleEnum } from "src/enum/user-role.enum";
+import { Competence } from "src/competences/entities/competence.entity";
+import { Fonctionnelle } from "src/fonctionnelles/entities/fonctionnelle.entity";
+import { Technique } from "src/techniques/entities/technique.entity";
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -122,5 +124,13 @@ export class User extends BaseEntity {
     @ApiProperty({ type: () => CentresInteret })
     @OneToMany(() => CentresInteret, (centres_interet) => centres_interet.user, { eager: true })
     centres_interets: CentresInteret[]
+
+    @ApiProperty({ type: () => Fonctionnelle })
+    @OneToMany(() => Fonctionnelle, (fonctionnelle) => fonctionnelle.user, { eager: true })
+    fonctionnelles: Fonctionnelle[]
+
+    @ApiProperty({ type: () => Technique })
+    @OneToMany(() => Technique, (technique) => technique.user, { eager: true })
+    techniques: Fonctionnelle[]
 
 }

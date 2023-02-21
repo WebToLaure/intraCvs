@@ -1,11 +1,11 @@
 import { BaseEntity, Entity, Column, PrimaryGeneratedColumn, ManyToOne} from "typeorm";
-import { Exclude } from "class-transformer";
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiTags } from "@nestjs/swagger";
 import { User } from "src/users/entities/user.entity";
 
 
-@Entity('competences')
-export class Competence extends BaseEntity {
+@ApiTags('FONCTIONNELLES')
+@Entity('fonctionnelles')
+export class Fonctionnelle extends BaseEntity{
 
     @ApiProperty()
     @PrimaryGeneratedColumn()
@@ -15,11 +15,14 @@ export class Competence extends BaseEntity {
     @Column({
         nullable: true,
     })
-    competences_clés: string;
+    libelle: string;
 
     @ApiProperty({ type: () => User })
-    @ManyToOne(() => User, (user) => user.competences, { nullable: false, onDelete: 'CASCADE' })
+    @ManyToOne(() => User, (user) => user.fonctionnelles, { nullable: false, onDelete: 'CASCADE' })
     user: User;
 
-
 }
+
+
+
+

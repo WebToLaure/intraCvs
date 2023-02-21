@@ -27,6 +27,15 @@ import { Langue } from './langues/entities/langue.entity';
 import { CentresInteretsModule } from './centres_interets/centres_interets.module';
 import { CentresInteret } from './centres_interets/entities/centres_interet.entity';
 
+import { FonctionnellesModule } from './fonctionnelles/fonctionnelles.module';
+import { Fonctionnelle } from './fonctionnelles/entities/fonctionnelle.entity';
+
+import { TechniquesModule } from './techniques/techniques.module';
+import { Technique } from './techniques/entities/technique.entity';
+
+
+
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -37,7 +46,7 @@ import { CentresInteret } from './centres_interets/entities/centres_interet.enti
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User,Presentation,Experience,Formation, Competence,Langue,CentresInteret],
+      entities: [User,Presentation,Experience,Formation, Competence,Fonctionnelle,Technique,Langue,CentresInteret],
       synchronize: true,
       logging: false
     }),
@@ -49,6 +58,8 @@ import { CentresInteret } from './centres_interets/entities/centres_interet.enti
     CompetencesModule,
     LanguesModule,
     CentresInteretsModule,
+    FonctionnellesModule,
+    TechniquesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

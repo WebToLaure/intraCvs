@@ -16,7 +16,7 @@ export class FormationsController {
   @ApiBody({ type: CreateFormationDto })
   @UseGuards(JwtAuthGuard)
   @Post()
-  @ApiOperation({ summary: "Ajout d'une formation sur compte utilisateur" })
+  @ApiOperation({ summary: "Ajout d'une formation sur CV utilisateur" })
   async createFormation(@Body() createFormationDto: CreateFormationDto, @Request() req) {
 
     if (await this.formationsService.findByFormationAndUser(req.user.userId, createFormationDto.specialite)) {
@@ -33,7 +33,7 @@ export class FormationsController {
   @ApiBody({ type: CreateFormationDto })
   @UseGuards(JwtAuthGuard)
   @Get()
-  @ApiOperation({ summary: "Récupération de l'ensemble des formations utilisateurs" })
+  @ApiOperation({ summary: "Récupération de l'ensemble des formations des CV utilisateurs" })
   async findAllForm(){
 
    const allFormations = await this.formationsService.findAllFormations();
@@ -48,7 +48,7 @@ export class FormationsController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  @ApiOperation({ summary: "Récupération d'une formation utilisateur par son id" })
+  @ApiOperation({ summary: "Récupération d'une formation sur CV utilisateur par son id" })
   async findFormationById(@Param('id', ParseIntPipe) id: number, @Request()req) {
     const formation = await this.formationsService.findFormationById(id,req.user.userId);
     if (!formation) {
@@ -71,18 +71,23 @@ export class FormationsController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  @ApiOperation({ summary: "Modification d'une Formation " })
+  @ApiOperation({ summary: "Modification d'une Formation du CV utilisateur" })
   async updateFormation(@Param('id') id: string, @Body() updateFormationDto: UpdateFormationDto, @Request() req) {
-    const update = this.formationsService.update(+id, updateFormationDto);
     if (await this.formationsService.findByFormationAndUser(req.user.userId, updateFormationDto.specialite)) {
       throw new HttpException("Formation déjà existante.", HttpStatus.NOT_ACCEPTABLE);
     }
-    return update;
+    const update = this.formationsService.update(+id, updateFormationDto);
+    
+    return  {
+      statusCode:200,
+      message:"votre formation a bien été modifiée",
+      data:update
+    } 
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  @ApiOperation({ summary: "Suppression d'une formation" })
+  @ApiOperation({ summary: "Suppression d'une formation du CV utilisateur" })
   async deleteFormation(@Param('id', ParseIntPipe) id: number, @Request() req) {
 
     const formation = await this.formationsService.findFormationById(id, req.user.userId);

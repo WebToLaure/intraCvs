@@ -15,7 +15,7 @@ export class Competence extends BaseEntity {
     @Column({
         nullable: true,
     })
-    competences_clés: string;
+    competence_clé: string;
 
     @ApiProperty({ type: () => User })
     @ManyToOne(() => User, (user) => user.competences, { nullable: false, onDelete: 'CASCADE' })

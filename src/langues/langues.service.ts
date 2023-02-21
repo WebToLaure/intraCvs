@@ -40,16 +40,27 @@ export class LanguesService {
 
   // Trouver une langue avec la donnée langue
   async findOneByLanguage(langue: string) {
-    return await Langue.findBy({langue})
+    return await Langue.findOneBy({langue})
   }
 
 
-
-  update(id: number, updateLangueDto: UpdateLangueDto) {
-    return `This action updates a #${id} langue`;
+// Modifier une langue
+  async update(id: number, updateLangueDto: UpdateLangueDto) {
+    const updatedLanguage = await Langue.update(+id, updateLangueDto);
+    if (updatedLanguage){
+      return Langue.findOneBy({ id })
+    }
+    return undefined;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} langue`;
+
+  // Supprimer une langue
+  async remove(id: number) {
+    const deletedLanguage = await Langue.findOneBy({id})
+    deletedLanguage.remove();
+    if (deletedLanguage){
+      return deletedLanguage
+    }
+    return undefined
   }
 }

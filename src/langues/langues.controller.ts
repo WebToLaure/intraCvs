@@ -13,19 +13,21 @@ export class LanguesController
   constructor(private readonly languesService: LanguesService,
     private readonly usersService: UsersService) { }
 
+
+
   // Création de la langue avec messages d'erreur
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createLangueDto: CreateLangueDto, @Request() req)
   {
-
+    // Vérifier que la langue existe déjà pour le user
     const languageExist = await this.languesService.findByLanguageAndUser(req.user.userId, createLangueDto.langue);
 
     if (languageExist)
     {
       throw new HttpException('La langue existe déjà', HttpStatus.NOT_ACCEPTABLE)
     }
-
+    // Créer la langue pour le user défini
     const user = await this.usersService.findOne(req.user.userId)
     const newLanguage = await this.languesService.create(createLangueDto, user);
 
@@ -51,6 +53,9 @@ export class LanguesController
     };
   }
 
+
+
+
   // Récupération d'une langue et message d'erreur
   @Get(':id')
   async findOne(@Param('id') id: string)
@@ -68,6 +73,9 @@ export class LanguesController
       data: oneLanguage
     }
   }
+
+
+
 
   // Récupération d'une langue par sa donnée 'langue'
   @Get('langues/:langue')
@@ -99,9 +107,9 @@ export class LanguesController
       throw new BadRequestException('la langue n\'existe pas')
     }
     
+    // Vérifier que la nouvelle langue n'existe pas déjà
     if (updateLangueDto.langue)
     {
-      // Vérifier que la langue modifiée n'existe pas déjà
       const newLanguage = await this.languesService.findOneByLanguage(updateLangueDto.langue)
       if (newLanguage && languageExist.langue !== updateLangueDto.langue)
       {
@@ -122,12 +130,24 @@ export class LanguesController
 
 
 
-
-
-
+  // Supprimer une langue
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string)
+  async remove(@Param('id') id: string)
   {
-    return this.languesService.remove(+id);
+    // Vérifier que la langue existe
+    const languageExist = await this.languesService.findOne(+id)
+    if(!languageExist){
+      throw new BadRequestException('la langue n\'existe pas');
+    }
+
+    // Supprimer la langue concernée
+    const deletedLanguage = await this.languesService.remove(+id);
+
+    return {
+      statusCode: 201,
+      message: `Suppression de la langue réussie`,
+      data: deletedLanguage
+    }
   }
 }

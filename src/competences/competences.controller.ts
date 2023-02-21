@@ -49,7 +49,7 @@ export class CompetencesController {
     */
   @UseGuards(JwtAuthGuard)
   @Get()
-  @ApiOperation({ summary: "Recherche des compétences sur CV utilisateurs" })
+  @ApiOperation({ summary: "Recherche des compétences_clés sur CV utilisateurs" })
   async findAllComp() {
     return await this.competencesService.findAllCompetences();
   }
@@ -61,7 +61,7 @@ export class CompetencesController {
   */
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  @ApiOperation({ summary: "Recherche d'une compétence sur CV par id" })
+  @ApiOperation({ summary: "Recherche d'une compétence_clé sur CV par id" })
   findCompetenceById(@Param('id', ParseIntPipe) id: number) {
     return this.competencesService.findCompetenceById(id);
   }
@@ -74,7 +74,7 @@ export class CompetencesController {
   @ApiBody({ type: UpdateCompetenceDto })
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  @ApiOperation({ summary: "Modification d'une compétence sur CV utilisateur" })
+  @ApiOperation({ summary: "Modification d'une compétence_clé sur CV utilisateur" })
   async updateComp(@Param('id', ParseIntPipe) id: number, @Body() updateCompetenceDto: UpdateCompetenceDto, @Request() req) {
     const competence = await this.competencesService.findCompetenceById(id);
     if (!competence) {
@@ -98,7 +98,7 @@ export class CompetencesController {
   */
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  @ApiOperation({ summary: "Suppression d'une compétence sur CV utilisateur" })
+  @ApiOperation({ summary: "Suppression d'une compétence_clé sur CV utilisateur" })
   async deleteComp(@Param('id', ParseIntPipe) id: number, @Request() req) {
 
     const competence = await this.competencesService.findCompetenceById(id);

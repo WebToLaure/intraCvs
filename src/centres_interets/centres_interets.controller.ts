@@ -31,7 +31,7 @@ export class CentresInteretsController {
   @ApiBody({ type: CreateCentresInteretDto })
   @UseGuards(JwtAuthGuard)
   @Get()
-  @ApiOperation({ summary: "Récupération de l'ensemble des Interets utilisateur" })
+  @ApiOperation({ summary: "Récupération de l'ensemble des Centres d'intérêts utilisateur" })
 
   async findAllInterets() {
     return await this.centresInteretsService.findAllInterets();
@@ -40,7 +40,7 @@ export class CentresInteretsController {
 
 
   @Get(':id')
-  @ApiOperation({ summary: "Récupération d'un Interet utilisateur par son id" })
+  @ApiOperation({ summary: "Récupération d'un Centre d'intérêt utilisateur par son id" })
   async findInteretById(@Param('id', ParseIntPipe) id: number) {
     const Interet = await this.centresInteretsService.findInteretById(id);
     return await this.centresInteretsService.findInteretById(+id);

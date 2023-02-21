@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { encodePassword } from 'src/utils/bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiResponse, ApiOperation, ApiProperty } from '@nestjs/swagger';
+import { ApiResponse, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 
@@ -13,7 +13,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class UsersController
 {
   constructor(private readonly usersService: UsersService) { }
-
+  @ApiTags('Sign Up')
   @Post('register')
   @ApiOperation({ summary: "Création d'un compte utilisateur" })
   @ApiResponse({ status: 403, description: 'Forbidden.' })

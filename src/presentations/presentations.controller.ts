@@ -19,7 +19,7 @@ export class PresentationsController {
     const userLog = req.user.userId
     const user = await this.usersService.findOne(userLog);
 
-    if (user.presentation){
+    if (user.presentation) {
       throw new HttpException("Impossible vous avez déjà une présentation", HttpStatus.FORBIDDEN)
     }
 
@@ -65,22 +65,20 @@ export class PresentationsController {
   @Patch()
   async updatePresentation(@Body() updatePresentationDto: UpdatePresentationDto, @Req() req) {
 
-    const user = req.user.userId
-    console.log(user);
-    
-        
-  if (!user.presentation){
+    const userId = req.user.userId // permet de récupérer l'id de l'user
+    const user = await this.usersService.findOne(userId); // permet de récuperer l'intégralité de la composition de l'user
+
+    if (user.presentation == null) { // condition permettant de savoir si la présentation de l'user est null ou si elle existe
       throw new HttpException("Impossible veuillez d'abord créer une présentation", HttpStatus.FORBIDDEN)
-    } 
-    console.log(user.presentation)
-    const updatePresentation = await this.presentationsService.updatePresentation(user, updatePresentationDto);
+    }
+
+    // const permettant de controller et d'injecter l'id de la présentation de l'user connecté et d'update les data
+    const updatePresentation = await this.presentationsService.updatePresentation(user.presentation.id, updatePresentationDto);
 
     return {
       statusCode: 201,
       message: 'La modification de la présentation a bien été prise en compte',
-      data: {
-        updatePresentation,
-      },
+      data: updatePresentation,
     };
   }
 
@@ -89,24 +87,22 @@ export class PresentationsController {
   async deletedPresentation(@Req() req) {
 
     const userLog = req.user.userId
-
     const user = await this.usersService.findOne(userLog);
 
     // check user presentation
+    if (user.presentation == null) { // condition permettant de savoir si la présentation de l'user est null ou si elle existe
+      throw new HttpException("Vous n'avez pas de presentation", HttpStatus.FORBIDDEN)
+    }
 
-    // prez existe, on la recup via son id
+    const id = user.presentation.id
+    user.presentation = null;
+    user.save()
 
-    //const presentationExist = await this.presentationsService.findPresentationById(user.presentation)
-    /* console.log(presentationExist);
-    if (!presentationExist){
-      throw new HttpException("Impossible vous n'avez pas de présentation", HttpStatus.FORBIDDEN)
-    } */
+    const deleted = await this.presentationsService.deletePresentation(id);
 
-    //const deleted = await this.presentationsService.deletePresentation(presentationExist);
-    /* console.log(deleted);
     if (!deleted) {
       throw new HttpException('Erreur Server', HttpStatus.INTERNAL_SERVER_ERROR);
-    } */
+    }
 
     return { message: `La présentation a bien été supprimée` };
   }

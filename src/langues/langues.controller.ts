@@ -115,7 +115,7 @@ export class LanguesController
       {
         throw new ConflictException('Cette langue existe déjà');
       }
-      console.log("test",newLanguage);
+      //console.log("test",newLanguage);
       
     }
 

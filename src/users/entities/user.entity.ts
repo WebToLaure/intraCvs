@@ -26,7 +26,10 @@ export class User extends BaseEntity {
     email: string;
 
     @ApiProperty()
-    @Column()
+    @Column({
+
+        nullable:true
+    })
     telephone: string;
 
     @ApiProperty()
@@ -92,7 +95,7 @@ export class User extends BaseEntity {
 
     @ApiProperty({ type: () => Presentation })
     @OneToOne(() => Presentation, (presentation) => presentation.user, { eager: true })
-    @JoinColumn()
+    @JoinColumn() 
     presentation: Presentation;
 
 

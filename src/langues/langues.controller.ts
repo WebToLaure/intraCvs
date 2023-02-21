@@ -3,29 +3,32 @@ import { LanguesService } from './langues.service';
 import { CreateLangueDto } from './dto/create-langue.dto';
 import { UpdateLangueDto } from './dto/update-langue.dto';
 import { UsersService } from 'src/users/users.service';
-import { BadRequestException, HttpException } from '@nestjs/common/exceptions';
+import { BadRequestException, ConflictException, HttpException } from '@nestjs/common/exceptions';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 
 @Controller('langues')
-export class LanguesController {
+export class LanguesController
+{
   constructor(private readonly languesService: LanguesService,
     private readonly usersService: UsersService) { }
 
-    // Création de la langue avec messages d'erreur
+  // Création de la langue avec messages d'erreur
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body() createLangueDto: CreateLangueDto, @Request() req) {
+  async create(@Body() createLangueDto: CreateLangueDto, @Request() req)
+  {
 
-    const languageExist = await this.languesService.findByLanguageAndUser(req.user.userId,createLangueDto.langue);
+    const languageExist = await this.languesService.findByLanguageAndUser(req.user.userId, createLangueDto.langue);
 
-    if (languageExist){
+    if (languageExist)
+    {
       throw new HttpException('La langue existe déjà', HttpStatus.NOT_ACCEPTABLE)
     }
 
     const user = await this.usersService.findOne(req.user.userId)
     const newLanguage = await this.languesService.create(createLangueDto, user);
-    
+
     return {
       statusCode: 201,
       message: `création d'une nouvelle langue réussie`,
@@ -38,7 +41,8 @@ export class LanguesController {
 
   // Récupération de toutes les langues: récupération avec statut
   @Get()
-  async findAll() {
+  async findAll()
+  {
     const allLanguages = await this.languesService.findAll();
     return {
       statusCode: 200,
@@ -49,10 +53,12 @@ export class LanguesController {
 
   // Récupération d'une langue et message d'erreur
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string)
+  {
     const oneLanguage = await this.languesService.findOne(+id);
     // Si la langue n'existe pas: message d'erreur
-    if (!oneLanguage){
+    if (!oneLanguage)
+    {
       throw new BadRequestException(`Langue non trouvée`);
     }
     // Si la langue existe: statut avec récupération de la donnée
@@ -65,10 +71,12 @@ export class LanguesController {
 
   // Récupération d'une langue par sa donnée 'langue'
   @Get('langues/:langue')
-  async findByLanguage(@Param('langue') langue: string){
+  async findByLanguage(@Param('langue') langue: string)
+  {
     const oneLanguage = await this.languesService.findOneByLanguage(langue);
     // Si la langue n'existe pas: message d'erreur
-    if (!oneLanguage){
+    if (!oneLanguage)
+    {
       throw new BadRequestException(`Langue non trouvée`);
     }
     return {
@@ -78,13 +86,48 @@ export class LanguesController {
     }
   }
 
+  // Modifier une langue
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLangueDto: UpdateLangueDto) {
-    return this.languesService.update(+id, updateLangueDto);
+  async update(@Param('id') id: number, @Body() updateLangueDto: UpdateLangueDto)
+  {
+
+    // Vérifie si la langue à modifier existe
+    const languageExist = await this.languesService.findOne(id);
+    if (!languageExist)
+    {
+      throw new BadRequestException('la langue n\'existe pas')
+    }
+    
+    if (updateLangueDto.langue)
+    {
+      // Vérifier que la langue modifiée n'existe pas déjà
+      const newLanguage = await this.languesService.findOneByLanguage(updateLangueDto.langue)
+      if (newLanguage && languageExist.langue !== updateLangueDto.langue)
+      {
+        throw new ConflictException('Cette langue existe déjà');
+      }
+      console.log("test",newLanguage);
+      
+    }
+
+    // Modifier la langue concernée
+    const updatedLanguage = await this.languesService.update(+id, updateLangueDto);
+    return {
+      statusCode: 201,
+      message: `La langue a été modifiée`,
+      data: updatedLanguage
+    }
   }
 
+
+
+
+
+
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string)
+  {
     return this.languesService.remove(+id);
   }
 }

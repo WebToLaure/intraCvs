@@ -29,8 +29,10 @@ export class FormationsService {
 
   async update(id: number, updateFormationDto: UpdateFormationDto) {
     const formation = await Formation.findOneBy({ id });
-    if (updateFormationDto.specialite) formation.specialite = updateFormationDto.specialite;
-    return await formation.save();
+    if (!formation) {
+      return undefined
+    }
+    return await Formation.update(+id, updateFormationDto);
   }
 
   async deleteFormation(id: number) {

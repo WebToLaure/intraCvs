@@ -25,7 +25,6 @@ export class FormationsController {
     }
     const user = await this.usersService.findOne(req.user.userId);
 
-
     return await this.formationsService.createFormation(createFormationDto, user);
   }
 

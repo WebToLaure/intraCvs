@@ -6,7 +6,7 @@ export class CreateFormationDto {
 
     @ApiProperty()
     @IsString()
-    formation: string;
+    specialite: string;
 
     @ApiProperty()
     @IsString()

@@ -16,7 +16,7 @@ export class CentresInteret extends BaseEntity {
     @Column({
         nullable: true,
     })
-    intitulé: string;
+    intitule: string;
 
     @ApiProperty({ type: () => User })
     @ManyToOne(() => User, (user) => user.centres_interets, { nullable: false, onDelete: 'CASCADE' })

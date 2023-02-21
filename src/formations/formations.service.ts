@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFormationDto } from './dto/create-formation.dto';
 import { UpdateFormationDto } from './dto/update-formation.dto';
-import { Like } from 'typeorm';
+import { ILike } from 'typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Formation } from './entities/formation.entity';
 
@@ -18,34 +18,36 @@ export class FormationsService {
     return await Formation.find();
   }
 
-  async findFormationById(id: number) {
-    const formation = await Formation.findOne({ relations: { user: true }, where: { id } })
+  async findFormationById(id: number, user:User) {
+    const formation = await Formation.findOne({ relations: { user: true }, where: { id } });
+    delete user.password
     if (!formation) {
       return undefined;
     }
     return formation;
   }
 
-  update(id: number, updateFormationDto: UpdateFormationDto) {
-    return `This action updates a #${id} formation`;
+  async update(id: number, updateFormationDto: UpdateFormationDto) {
+    const formation = await Formation.findOneBy({ id });
+    if (updateFormationDto.specialite) formation.specialite = updateFormationDto.specialite;
+    return await formation.save();
   }
 
   async deleteFormation(id: number) {
     return (await Formation.delete({ id })).affected;;
   }
 
-
-  async findFormationByName(formation: string) {
-    const name = await Formation.findBy({ formation: Like(`%${formation}%`) });
-    if (name.length === 0) {
+  async findFormationByName(specialite: string) {
+    const findForm = await Formation.findBy({ specialite: ILike(`%${specialite}%`) });
+    if (findForm.length === 0) {  
       return undefined
     }
-    return name;
+    return findForm;
   }
 
 
-  async findByFormationAndUser(userId: number, formation: string) {
-    return await Formation.findOne({ where: { user: { id: userId }, formation: formation } });
+  async findByFormationAndUser(userId: number, specialite: string) {
+    return await Formation.findOne({ where: { user: { id: userId }, specialite: specialite} });
   }
 
 }

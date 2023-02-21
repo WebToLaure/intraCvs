@@ -6,6 +6,6 @@ export class CreatePresentationDto {
 
     @ApiProperty()
     @IsString()
-    A_propos: string;
+    name: string;
 
 }

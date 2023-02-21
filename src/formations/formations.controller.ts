@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus,ParseIntPipe, HttpException, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, ParseIntPipe, HttpException, Request, UseGuards, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiBody, ApiTags, ApiOperation } from '@nestjs/swagger';
 import { FormationsService } from './formations.service';
@@ -8,6 +8,7 @@ import { UsersService } from 'src/users/users.service';
 
 @ApiTags("FORMATIONS")
 @Controller('formations')
+
 export class FormationsController {
   constructor(private readonly formationsService: FormationsService,
     private readonly usersService: UsersService) { }
@@ -15,31 +16,41 @@ export class FormationsController {
   @ApiBody({ type: CreateFormationDto })
   @UseGuards(JwtAuthGuard)
   @Post()
-  @ApiOperation({ summary: "Création d'une formation sur compte utilisateur" })
+  @ApiOperation({ summary: "Ajout d'une formation sur compte utilisateur" })
   async createFormation(@Body() createFormationDto: CreateFormationDto, @Request() req) {
 
-    if (await this.formationsService.findByFormationAndUser(req.user.userId, createFormationDto.formation)) {
+    if (await this.formationsService.findByFormationAndUser(req.user.userId, createFormationDto.specialite)) {
+
       throw new HttpException("Formation déjà renseignée", HttpStatus.NOT_ACCEPTABLE);
     }
-    const user = await this.usersService.findUserById(req.user.userId) 
+    const user = await this.usersService.findOne(req.user.userId);
+   
+
     return await this.formationsService.createFormation(createFormationDto, user);
   }
 
 
-  @ApiBody({ type:CreateFormationDto })
+  @ApiBody({ type: CreateFormationDto })
   @UseGuards(JwtAuthGuard)
   @Get()
   @ApiOperation({ summary: "Récupération de l'ensemble des formations utilisateurs" })
-  async findAllForm() {
-    return await this.formationsService.findAllFormations();
+  async findAllForm(){
+
+   const allFormations = await this.formationsService.findAllFormations();
+   if(!allFormations){
+    throw new HttpException("aucune formation trouvée", HttpStatus.BAD_REQUEST);
+   }
+
+   return allFormations;
   }
 
 
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
   @ApiOperation({ summary: "Récupération d'une formation utilisateur par son id" })
-  async findFormationById(@Param('id', ParseIntPipe) id: number) {
-    const formation = await this.formationsService.findFormationById(id);
+  async findFormationById(@Param('id', ParseIntPipe) id: number, @Request()req) {
+    const formation = await this.formationsService.findFormationById(id,req.user.userId);
     if (!formation) {
       throw new HttpException("cette formation n'existe pas", HttpStatus.BAD_REQUEST);
     }
@@ -48,36 +59,39 @@ export class FormationsController {
 
 
   @UseGuards(JwtAuthGuard)
-  @Get('formations/:name')
-  async findFormationByName(@Param('name') name: string, @Request() req) {
-    const formation = await this.formationsService.findFormationByName(name);
+  @Get('specialite/:name')
+  @ApiOperation({ summary: "Récupération d'une formation par son nom " })
+  async findFormationByName(@Param('name') specialite: string) {
+    const formation = await this.formationsService.findFormationByName(specialite);
     if (!formation) {
       throw new HttpException("Aucune formation trouvée", HttpStatus.NOT_FOUND);
     }
-    return await this.formationsService.findByFormationAndUser(req.user.userId, req.user.formation);
+    return formation;
   }
 
-
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFormationDto: UpdateFormationDto) {
-    return this.formationsService.update(+id, updateFormationDto);
+  @ApiOperation({ summary: "Modification d'une Formation " })
+  async updateFormation(@Param('id') id: string, @Body() updateFormationDto: UpdateFormationDto, @Request() req) {
+    const update = this.formationsService.update(+id, updateFormationDto);
+    if (await this.formationsService.findByFormationAndUser(req.user.userId, updateFormationDto.specialite)) {
+      throw new HttpException("Formation déjà existante.", HttpStatus.NOT_ACCEPTABLE);
+    }
+    return update;
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @ApiOperation({ summary: "Suppression d'une formation" })
   async deleteFormation(@Param('id', ParseIntPipe) id: number, @Request() req) {
-    const formation= await this.formationsService.findFormationById(id);
+
+    const formation = await this.formationsService.findFormationById(id, req.user.userId);
 
     if (!formation) {
 
       throw new HttpException("Formation introuvable.", HttpStatus.NOT_FOUND);
     }
 
-    if (req.user.userId !== formation.user.id) {
-
-      throw new HttpException(" Non autorisé.", HttpStatus.FORBIDDEN);
-    }
     if (await this.formationsService.deleteFormation(id)) {
 
       throw new HttpException("Formation supprimée.", HttpStatus.OK);

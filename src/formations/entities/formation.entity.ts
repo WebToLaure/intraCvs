@@ -13,21 +13,18 @@ export class Formation extends BaseEntity {
     id: number;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         nullable: true,
     })
-    formation: string;
+    specialite: string;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         nullable: true,
     })
     diplôme: string;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         type:"date",
         nullable: true,

@@ -6,6 +6,6 @@ export class CreateCentresInteretDto {
 
     @ApiProperty()
     @IsString()
-    intitulé: string;
+    intitule: string;
 
 }

@@ -63,10 +63,10 @@ export class LanguesController {
     }
   }
 
-  /* // Récupération d'une langue par sa donnée 'langue'
-  @Get(':langue')
+  // Récupération d'une langue par sa donnée 'langue'
+  @Get('langues/:langue')
   async findByLanguage(@Param('langue') langue: string){
-    const oneLanguage = await this.languesService.findOneByLangue(langue);
+    const oneLanguage = await this.languesService.findOneByLanguage(langue);
     // Si la langue n'existe pas: message d'erreur
     if (!oneLanguage){
       throw new BadRequestException(`Langue non trouvée`);
@@ -76,7 +76,7 @@ export class LanguesController {
       message: `Récupération réussie de la langue par la donnée ${langue}`,
       data: oneLanguage
     }
-  } */
+  }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateLangueDto: UpdateLangueDto) {

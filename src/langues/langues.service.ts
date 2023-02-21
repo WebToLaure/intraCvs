@@ -38,6 +38,11 @@ export class LanguesService {
     return await Langue.findOne({ where: { user: { id: userId }, langue: langue } });
   }
 
+  // Trouver une langue avec la donnée langue
+  async findOneByLanguage(langue: string) {
+    return await Langue.findBy({langue})
+  }
+
 
 
   update(id: number, updateLangueDto: UpdateLangueDto) {

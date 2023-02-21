@@ -58,17 +58,23 @@ export class UsersService
 
 
   // Modifier un user dans la BDD par son id
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User>
+  async update(id: number, updateUserDto: UpdateUserDto)
   {
 
-    const newUser = await User.update(id, updateUserDto);
+    const updatedUser = await User.findOneBy({id});
 
-    if (newUser)
-    {
-      return await User.findOneBy({ id })
-    };
+    updatedUser.firstname = updateUserDto.firstname,
+    updatedUser.lastname = updateUserDto.lastname,
+    updatedUser.telephone = updateUserDto.telephone,
+    updatedUser.password = updateUserDto.password,
+    updatedUser.poste_actuel = updateUserDto.poste_actuel,
+    updatedUser.classe_professionnelle = updateUserDto.classe_professionnelle,
+    updatedUser.ville_affectation = updateUserDto.ville_affectation,
+    updatedUser.region_affectation = updateUserDto.region_affectation
 
-    return undefined;
+    await User.save(updatedUser);
+
+    return updatedUser
   }
 
 
@@ -79,7 +85,7 @@ export class UsersService
     const user = await User.remove(id);
 
     if (user) {
-      return `This action removes a #${id} user`;
+      return user;
     }
     return undefined
   }

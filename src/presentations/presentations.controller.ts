@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, UseGuards, Req, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, UseGuards, Req, UseInterceptors, ClassSerializerInterceptor, BadRequestException } from '@nestjs/common';
 import { PresentationsService } from './presentations.service';
 import { CreatePresentationDto } from './dto/create-presentation.dto';
 import { UpdatePresentationDto } from './dto/update-presentation.dto';
@@ -14,21 +14,21 @@ export class PresentationsController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body()createPresentationDto: CreatePresentationDto, @Req() req) {
+  async create(@Body() createPresentationDto: CreatePresentationDto, @Req() req) {
 
-    const userLog = req.user.id
-    const userExist = await this.usersService.findOne(userLog);
+    const userLog = req.user.userId
+    const user = await this.usersService.findOne(userLog);
 
-    if (!userExist) {
-      throw new HttpException("Veuillez vous logger", HttpStatus.FORBIDDEN)
-    };
+    if (user.presentation){
+      throw new HttpException("Impossible vous avez déjà une présentation", HttpStatus.FORBIDDEN)
+    }
 
-    const createdPresentation = await this.presentationsService.createPresentation(userExist, createPresentationDto);
+    const createdPresentation = await this.presentationsService.createPresentation(user, createPresentationDto);
 
     return {
       statusCode: 201,
       data: createdPresentation,
-      message: "Compétence créée"
+      message: "Présentation créée"
     }
 
   }
@@ -38,7 +38,7 @@ export class PresentationsController {
     const presentationExist = await this.presentationsService.findAllPresentation();
 
     if (!presentationExist) {
-      throw new HttpException("L'utilisateur n'existe pas", HttpStatus.NOT_FOUND);
+      throw new HttpException("Aucune présentations n'existe", HttpStatus.NOT_FOUND);
     }
 
     return presentationExist;
@@ -61,17 +61,53 @@ export class PresentationsController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Patch()
+  async updatePresentation(@Body() updatePresentationDto: UpdatePresentationDto, @Req() req) {
 
+    const user = req.user.userId
+    console.log(user);
+    
+        
+  if (!user.presentation){
+      throw new HttpException("Impossible veuillez d'abord créer une présentation", HttpStatus.FORBIDDEN)
+    } 
+    console.log(user.presentation)
+    const updatePresentation = await this.presentationsService.updatePresentation(user, updatePresentationDto);
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePresentationDto: UpdatePresentationDto) {
-    return this.presentationsService.update(+id, updatePresentationDto);
+    return {
+      statusCode: 201,
+      message: 'La modification de la présentation a bien été prise en compte',
+      data: {
+        updatePresentation,
+      },
+    };
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.presentationsService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  async deletedPresentation(@Req() req) {
 
+    const userLog = req.user.userId
 
+    const user = await this.usersService.findOne(userLog);
+
+    // check user presentation
+
+    // prez existe, on la recup via son id
+
+    //const presentationExist = await this.presentationsService.findPresentationById(user.presentation)
+    /* console.log(presentationExist);
+    if (!presentationExist){
+      throw new HttpException("Impossible vous n'avez pas de présentation", HttpStatus.FORBIDDEN)
+    } */
+
+    //const deleted = await this.presentationsService.deletePresentation(presentationExist);
+    /* console.log(deleted);
+    if (!deleted) {
+      throw new HttpException('Erreur Server', HttpStatus.INTERNAL_SERVER_ERROR);
+    } */
+
+    return { message: `La présentation a bien été supprimée` };
   }
 }

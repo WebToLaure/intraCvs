@@ -20,9 +20,9 @@ export class CompetencesService {
   * * Methode permettant de créer une compétence sur son CV utilisateur suivant le modèle CreateCompétenceDto..
   */
   async createComp(createCompetenceDto: CreateCompetenceDto, user: User) {
-    const competence = new Competence();
-    competence.competence_clé = createCompetenceDto.competence_clé;
+    const competence = Competence.create({...createCompetenceDto});
     delete user.password;
+    competence.user=user;
     return await competence.save();
   }
 

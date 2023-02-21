@@ -38,6 +38,7 @@ export class CompetencesController {
     }
 
     const user = await this.usersService.findOne(req.user.userId);
+
     return await this.competencesService.createComp(createCompetenceDto, user);
   }
 
@@ -82,7 +83,12 @@ export class CompetencesController {
     if (await this.competencesService.findCompetenceAndUser(req.user.userId, updateCompetenceDto.competence_clé)) {
       throw new HttpException("Compétence déjà existante.", HttpStatus.NOT_ACCEPTABLE);
     }
-    return await this.competencesService.updateComp(id, updateCompetenceDto);
+    const update = await this.competencesService.updateComp(id, updateCompetenceDto);
+    return {
+      statusCode: 200,
+      message: "Votre compétence a été mise à jour",
+      data: update
+    }
   }
 
   /** 

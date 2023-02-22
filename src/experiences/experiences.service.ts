@@ -17,21 +17,43 @@ export class ExperiencesService {
     return await newExperience.save();
   }
 
+
+
   // Trouver un intitulé_poste avec l'id du user
   async findByExperienceAndUser(userId: number, intitulé_poste: string){
     return await Experience.findOne({ where: { user: { id: userId }, intitulé_poste: intitulé_poste } })
   }
 
-  findAll() {
-    return `This action returns all experiences`;
+
+
+  // Trouver toutes les expériences
+  async findAll() {
+    const experience = await Experience.find()
+    return experience;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} experience`;
+  // Trouver une expérience par son id
+  async findOne(id: number) {
+    const oneExperirence = await Experience.findOneBy({id});
+    if (oneExperirence){
+      return oneExperirence
+    }
+    return undefined;
   }
 
-  update(id: number, updateExperienceDto: UpdateExperienceDto) {
-    return `This action updates a #${id} experience`;
+  // Trouver une expérience par un intitulé_poste
+  async findOneByPoste(intitulé_poste: string){
+    return await Experience.findOneBy({intitulé_poste})
+  }
+
+
+  // Modifier une expérience
+  async update(id: number, updateExperienceDto: UpdateExperienceDto) {
+    const updatedExperience = await Experience.update(+id, updateExperienceDto);
+    if (updatedExperience) {
+      return Experience.findOneBy({id})
+    }
+    return undefined;
   }
 
   remove(id: number) {

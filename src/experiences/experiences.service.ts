@@ -4,6 +4,16 @@ import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
 import { Experience } from './entities/experience.entity';
 
+/**
+ * Ensemble des services pour la table Expériences:
+ * * **create**: permet de créer une expérience dans la BDD
+ * * **findByExperienceAndUser**: permet de trouver une expérience avec l'id du user dans la BDD
+ * * **findAll**: permet de trouver toutes les expériences dans la BDD
+ * * **findOne**: permer de trouver une expérience par son id dans la BDD
+ * * **findOneByPoste**: permet de trouver une expérience par un intitulé_poste dans la BDD
+ * * **update**: permet de modifier une expérience par son id dans la BDD
+ * * ** delete**: permet de supprimer une expérience par son id dans la BDD
+ */
 @Injectable()
 // Class permettant la gestion des requètes SQL pour les expériences
 export class ExperiencesService {
@@ -19,7 +29,7 @@ export class ExperiencesService {
 
 
 
-  // Trouver un intitulé_poste avec l'id du user
+  // Trouver une expérience avec l'id du user
   async findByExperienceAndUser(userId: number, intitulé_poste: string){
     return await Experience.findOne({ where: { user: { id: userId }, intitulé_poste: intitulé_poste } })
   }

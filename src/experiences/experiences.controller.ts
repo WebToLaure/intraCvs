@@ -1,18 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, HttpException, HttpStatus, BadRequestException, ConflictException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, HttpException, HttpStatus, BadRequestException, ConflictException, UseInterceptors } from '@nestjs/common';
 import { ExperiencesService } from './experiences.service';
 import { CreateExperienceDto } from './dto/create-experience.dto';
 import { UpdateExperienceDto } from './dto/update-experience.dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ClassSerializerInterceptor } from '@nestjs/common/serializer/class-serializer.interceptor';
 
 
-
+@ApiTags(`EXPERIENCES`)
 @Controller('experiences')
+@UseInterceptors(ClassSerializerInterceptor)
 export class ExperiencesController
 {
   constructor(private readonly experiencesService: ExperiencesService,
     private readonly usersService: UsersService) { }
+
+
   // Création d'une expérience
+  @ApiBody({ type: CreateExperienceDto})
+  @ApiOperation({ summary: `Ajout d'une expérience sur un compte utilisateur`})
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createExperienceDto: CreateExperienceDto, @Request() req)
@@ -35,6 +42,8 @@ export class ExperiencesController
 
 
   // Trouver toutes les expérience
+  @ApiBody({ type: CreateExperienceDto})
+  @ApiOperation({ summary: `Récupération de l'ensemble des expériences utilisateur`})
   @UseGuards(JwtAuthGuard)
   @Get()
   async findAll()
@@ -50,6 +59,7 @@ export class ExperiencesController
 
 
   // Trouver une expérience par son id
+  @ApiOperation({ summary: `Récupération d'une expérience par son id`})
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string)
@@ -69,6 +79,7 @@ export class ExperiencesController
 
 
   // Trouver une expérience par un intitulé_poste
+  @ApiOperation({ summary: `Récupération d'une expérience par un intitulé_poste`})
   @UseGuards(JwtAuthGuard)
   @Get('experiences/:intitulé_poste')
   async findByExperience(@Param('intitulé_poste') intitulé_poste: string){
@@ -87,6 +98,7 @@ export class ExperiencesController
 
 
   // Modifier une expérience
+  @ApiOperation({ summary: `Modification d'une expérience par son id`})
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(@Param('id') id: number, @Body() updateExperienceDto: UpdateExperienceDto)
@@ -116,6 +128,7 @@ export class ExperiencesController
 
 
   // Supprimer une experience
+  @ApiOperation({ summary: `Suppression d'une expression par son id`})
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string)

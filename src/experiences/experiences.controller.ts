@@ -115,10 +115,22 @@ export class ExperiencesController
 
 
 
-
+  // Supprimer une experience
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string)
+  async remove(@Param('id') id: string)
   {
-    return this.experiencesService.remove(+id);
+    // Vérifier que l'expérience existe
+    const experienceExist = await this.experiencesService.findOne(+id);
+    if (!experienceExist){
+      throw new BadRequestException(`L'expérience n'existe pas`);
+    }
+    // Supprimer l'expérience concernée
+    const deletedExperience = await this.experiencesService.remove(+id);
+    return{
+      statusCode: 201,
+      message: `Suppression de l'expérience réussie`,
+      data: deletedExperience
+    }
   }
 }

@@ -56,7 +56,13 @@ export class ExperiencesService {
     return undefined;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} experience`;
+  // Supprimer une expérience
+  async remove(id: number) {
+    const deletedExperience = await Experience.findOneBy({id})
+    deletedExperience.remove();
+    if (deletedExperience){
+      return deletedExperience
+    }
+    return undefined;
   }
 }

@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, Column, PrimaryGeneratedColumn, ManyToOne,  } from "typeorm";
+import { BaseEntity, Entity, Column, PrimaryGeneratedColumn, ManyToOne, } from "typeorm";
 import { Exclude } from "class-transformer";
 import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/users/entities/user.entity";
@@ -26,11 +26,11 @@ export class Formation extends BaseEntity {
 
     @ApiProperty()
     @Column({
-        type:"date",
+        type: "date",
         nullable: true,
     })
     date_obtention: Date;
-    
+
 
     @ApiProperty({ type: () => User })
     @ManyToOne(() => User, (user) => user.formations, { nullable: false, onDelete: 'CASCADE' })

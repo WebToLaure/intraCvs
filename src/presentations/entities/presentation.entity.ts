@@ -1,5 +1,4 @@
-import { BaseEntity, Entity, Column, PrimaryGeneratedColumn, OneToOne } from "typeorm";
-import { Exclude } from "class-transformer";
+import { BaseEntity, Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "typeorm";
 import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/users/entities/user.entity";
 
@@ -13,14 +12,13 @@ export class Presentation extends BaseEntity {
     id: number;
 
     @ApiProperty()
-    @Exclude()
     @Column({
-        nullable: true,
+        nullable:false
     })
-    A_propos: string;
-
+    name: string;
 
     @ApiProperty({ type: () => Presentation })
-    @OneToOne(() => User, (user) => user.presentation)
+    @OneToOne(() => User, (user) => user.presentation, {onDelete: 'CASCADE'})
     user: User
+
 }

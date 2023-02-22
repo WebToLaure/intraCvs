@@ -1,14 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString } from "class-validator";
 
-export class CreateCompetenceDto {
 
-   
+export class CreateTechniqueDto {
+
     @ApiProperty()
     @IsString()
-    competence_clé: string;
-
-
+    libelle: string;
 
 
 

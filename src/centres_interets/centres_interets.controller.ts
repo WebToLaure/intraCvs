@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, UseGuards, Request, HttpException, HttpStatus, ParseIntPipe, Bind } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, UseGuards, Request, HttpException, HttpStatus, ParseIntPipe } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiBody, ApiTags, ApiOperation } from '@nestjs/swagger';
 import { CentresInteretsService } from './centres_interets.service';
@@ -25,13 +25,13 @@ export class CentresInteretsController {
     }
     const user = await this.usersService.findOne(req.user.userId);
 
-    return this.centresInteretsService.createInteret(createCentresInteretDto, user);
+    return await this.centresInteretsService.createInteret(createCentresInteretDto, user);
   }
 
   @ApiBody({ type: CreateCentresInteretDto })
   @UseGuards(JwtAuthGuard)
   @Get()
-  @ApiOperation({ summary: "Récupération de l'ensemble des Interets utilisateur" })
+  @ApiOperation({ summary: "Récupération de l'ensemble des Centres d'intérêts utilisateur" })
 
   async findAllInterets() {
     return await this.centresInteretsService.findAllInterets();
@@ -40,10 +40,10 @@ export class CentresInteretsController {
 
 
   @Get(':id')
-  @ApiOperation({ summary: "Récupération d'un Interet utilisateur par son id" })
+  @ApiOperation({ summary: "Récupération d'un Centre d'intérêt utilisateur par son id" })
   async findInteretById(@Param('id', ParseIntPipe) id: number) {
     const Interet = await this.centresInteretsService.findInteretById(id);
-    return this.centresInteretsService.findInteretById(+id);
+    return await this.centresInteretsService.findInteretById(+id);
   }
 
 
@@ -51,16 +51,16 @@ export class CentresInteretsController {
   @Patch(':id')
   @ApiOperation({ summary: "Modification d'un Centre d'Intérêt " })
   async updateInteret(@Param('id') id: string, @Body() updateCentresIneteretDto: UpdateCentresInteretDto, @Request() req) {
-    const update = this.centresInteretsService.updateInteret(+id, updateCentresIneteretDto);
     if (await this.centresInteretsService.findInteretAndUser(req.user.userId, updateCentresIneteretDto.intitule)) {
-      throw new HttpException("Intérêt déjà existant.", HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException("Ce centre d'intérêt existe déjà.", HttpStatus.NOT_ACCEPTABLE);
     }
-    return  {
-      statusCode:200,
-      data:update,
-      message:"votre centre d'intérêt a bien été modifié",
-      
-    }  
+    const update = await this.centresInteretsService.updateInteret(+id, updateCentresIneteretDto);
+
+    return {
+      statusCode: 200,
+      message: "Modification du centre d'intérêt prise en compte",
+      data: update
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -72,14 +72,14 @@ export class CentresInteretsController {
 
     if (!Interet) {
 
-      throw new HttpException("Interet introuvable.", HttpStatus.NOT_FOUND);
+      throw new HttpException("Centre d'intérêt introuvable.", HttpStatus.NOT_FOUND);
     }
 
     if (await this.centresInteretsService.deleteInteret(id)) {
 
-      throw new HttpException("Centre Intérêt supprimée.", HttpStatus.OK);
+      throw new HttpException("Centre d'intérêt supprimée.", HttpStatus.OK);
     }
     throw new HttpException("Suppression impossible.", HttpStatus.BAD_REQUEST);
   }
-  }
+}
 

@@ -1,26 +1,46 @@
 import { Injectable } from '@nestjs/common';
+import { User } from 'src/users/entities/user.entity';
 import { CreatePresentationDto } from './dto/create-presentation.dto';
 import { UpdatePresentationDto } from './dto/update-presentation.dto';
+import { Presentation } from './entities/presentation.entity';
 
 @Injectable()
 export class PresentationsService {
-  create(createPresentationDto: CreatePresentationDto) {
-    return 'This action adds a new presentation';
+  async createPresentation(userLog: User, createPresentationDto: CreatePresentationDto): Promise<Presentation> {
+
+    const presentation = new Presentation()
+    presentation.name = createPresentationDto.name
+    presentation.user = userLog
+
+    await presentation.save()
+
+    return presentation
   }
 
-  findAll() {
-    return `This action returns all presentations`;
+  async findAllPresentation() { // recherche l'ensemble des présentations
+    return await Presentation.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} presentation`;
+  async findPresentationById(id: number) { // recherche une présentation par son id
+    return await Presentation.findOneBy({ id: id });
   }
 
-  update(id: number, updatePresentationDto: UpdatePresentationDto) {
-    return `This action updates a #${id} presentation`;
+  async updatePresentation(id: number, updatePresentationDto: UpdatePresentationDto): Promise<Presentation> {
+
+    const presentation = await Presentation.findOneBy({id}); // const permettant de retrouver une présentation par son id
+
+    presentation.name = updatePresentationDto.name; // presentation.name = actuelle ; updatePresentationDto.name = nouvelle
+
+    await presentation.save() // sauvegarde de la nouvelle presentation
+
+    return presentation
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} presentation`;
+  async deletePresentation(id: number) { 
+
+    const presentation = await Presentation.findOneBy({id}); // const permettant de retrouver une présentation par son id
+    return await presentation.remove();
+    //return await Presentation.delete({ id });
+    // return presentation
   }
 }

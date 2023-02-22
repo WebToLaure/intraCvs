@@ -81,8 +81,15 @@ export class PresentationsController {
       data: updatePresentation,
     };
   }
+}
 
-  @UseGuards(JwtAuthGuard)
+
+
+
+
+
+
+/*   @UseGuards(JwtAuthGuard)
   @Delete()
   async deletedPresentation(@Req() req) {
 
@@ -96,7 +103,7 @@ export class PresentationsController {
 
     const id = user.presentation.id
     user.presentation = null;
-    user.save()
+    await user.save()
 
     const deleted = await this.presentationsService.deletePresentation(id);
 
@@ -105,5 +112,5 @@ export class PresentationsController {
     }
 
     return { message: `La présentation a bien été supprimée` };
-  }
-}
+  } */
+

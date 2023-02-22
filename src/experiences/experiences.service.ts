@@ -29,20 +29,20 @@ export class ExperiencesService {
 
 
 
-  // Trouver une expérience avec l'id du user
+  // Trouver une expérience avec l'id du user dans la BDD
   async findByExperienceAndUser(userId: number, intitulé_poste: string){
     return await Experience.findOne({ where: { user: { id: userId }, intitulé_poste: intitulé_poste } })
   }
 
 
 
-  // Trouver toutes les expériences
+  // Trouver toutes les expériences dans la BDD
   async findAll() {
     const experience = await Experience.find()
     return experience;
   }
 
-  // Trouver une expérience par son id
+  // Trouver une expérience par son id dans la BDD
   async findOne(id: number) {
     const oneExperirence = await Experience.findOneBy({id});
     if (oneExperirence){
@@ -51,13 +51,13 @@ export class ExperiencesService {
     return undefined;
   }
 
-  // Trouver une expérience par un intitulé_poste
+  // Trouver une expérience par un intitulé_poste dans la BDD
   async findOneByPoste(intitulé_poste: string){
     return await Experience.findOneBy({intitulé_poste})
   }
 
 
-  // Modifier une expérience
+  // Modifier une expérience dans la BDD
   async update(id: number, updateExperienceDto: UpdateExperienceDto) {
     const updatedExperience = await Experience.update(+id, updateExperienceDto);
     if (updatedExperience) {
@@ -66,7 +66,7 @@ export class ExperiencesService {
     return undefined;
   }
 
-  // Supprimer une expérience
+  // Supprimer une expérience dans la BDD
   async remove(id: number) {
     const deletedExperience = await Experience.findOneBy({id})
     deletedExperience.remove();

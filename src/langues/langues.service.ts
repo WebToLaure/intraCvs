@@ -4,6 +4,15 @@ import { UpdateLangueDto } from './dto/update-langue.dto';
 import { User } from 'src/users/entities/user.entity';
 import { Langue } from './entities/langue.entity';
 
+/**
+ * Ensemble des services pour la table Langues:
+ * * **create**: permet de créer une langue dans la BDD
+ * * **findAll**: permet de trouver toutes les languesdans la BDD
+ * * **findOne**: permet de trouver une langue par son id dans la BDD
+ * * **findByLanguageAndUser**: permet de trouver une langue avec l'id du user
+ * * **update**: permet de modifier une langue par son id dans la BDD
+ * * **remove**: permet de supprimer une langue par son id dans la BDD
+ */
 @Injectable()
 // Class permettant la gestion des requètes SQL pour les langues
 export class LanguesService {
@@ -33,18 +42,18 @@ export class LanguesService {
   }
   
 
-  // Trouver une langue avec l'id du user
+  // Trouver une langue avec l'id du user dans la BDD
   async findByLanguageAndUser(userId: number, langue: string) {
     return await Langue.findOne({ where: { user: { id: userId }, langue: langue } });
   }
 
-  // Trouver une langue avec la donnée langue
+  // Trouver une langue avec la donnée langue dans la BDD
   async findOneByLanguage(langue: string) {
     return await Langue.findOneBy({langue})
   }
 
 
-// Modifier une langue
+// Modifier une langue dans la BDD
   async update(id: number, updateLangueDto: UpdateLangueDto) {
     const updatedLanguage = await Langue.update(+id, updateLangueDto);
     if (updatedLanguage){
@@ -54,7 +63,7 @@ export class LanguesService {
   }
 
 
-  // Supprimer une langue
+  // Supprimer une langue dans la BDD
   async remove(id: number) {
     const deletedLanguage = await Langue.findOneBy({id})
     deletedLanguage.remove();

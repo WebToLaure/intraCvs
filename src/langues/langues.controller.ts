@@ -5,8 +5,10 @@ import { UpdateLangueDto } from './dto/update-langue.dto';
 import { UsersService } from 'src/users/users.service';
 import { BadRequestException, ConflictException, HttpException } from '@nestjs/common/exceptions';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 
+@ApiTags(`LANGUES`)
 @Controller('langues')
 export class LanguesController
 {
@@ -16,6 +18,8 @@ export class LanguesController
 
 
   // Création de la langue avec messages d'erreur
+  @ApiBody({ type: CreateLangueDto})
+  @ApiOperation({ summary: `Ajout d'une langue sur un compte utilisateur`})
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createLangueDto: CreateLangueDto, @Request() req)
@@ -42,6 +46,8 @@ export class LanguesController
 
 
   // Récupération de toutes les langues: récupération avec statut
+  @ApiBody({ type: CreateLangueDto})
+  @ApiOperation({ summary: `Récupération de toutes les langues utilisateur`})
   @Get()
   async findAll()
   {
@@ -57,6 +63,7 @@ export class LanguesController
 
 
   // Récupération d'une langue et message d'erreur
+  @ApiOperation({ summary: `Récupération d'une langue par son id`})
   @Get(':id')
   async findOne(@Param('id') id: string)
   {
@@ -78,6 +85,7 @@ export class LanguesController
 
 
   // Récupération d'une langue par sa donnée 'langue'
+  @ApiOperation({ summary: `Récupération de la langue par le langage enregistré`})
   @Get('langues/:langue')
   async findByLanguage(@Param('langue') langue: string)
   {
@@ -95,6 +103,7 @@ export class LanguesController
   }
 
   // Modifier une langue
+  @ApiOperation({ summary: `Modification d'une langue par son id`})
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(@Param('id') id: number, @Body() updateLangueDto: UpdateLangueDto)
@@ -130,6 +139,7 @@ export class LanguesController
 
 
   // Supprimer une langue
+  @ApiOperation({ summary: `Suppression de la langue par son id`})
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string)

@@ -6,12 +6,12 @@ import { Langue } from './entities/langue.entity';
 
 /**
  * Ensemble des services pour la table Langues:
- * * **create**: permet de créer une langue dans la BDD
- * * **findAll**: permet de trouver toutes les languesdans la BDD
- * * **findOne**: permet de trouver une langue par son id dans la BDD
- * * **findByLanguageAndUser**: permet de trouver une langue avec l'id du user
- * * **update**: permet de modifier une langue par son id dans la BDD
- * * **remove**: permet de supprimer une langue par son id dans la BDD
+ * * **create**                 : permet de créer une langue dans la BDD
+ * * **findAll**                : permet de trouver toutes les languesdans la BDD
+ * * **findOne**                : permet de trouver une langue par son id dans la BDD
+ * * **findByLanguageAndUser**  : permet de trouver une langue avec l'id du user
+ * * **update**                 : permet de modifier une langue par son id dans la BDD
+ * * **remove**                 : permet de supprimer une langue par son id dans la BDD
  */
 @Injectable()
 // Class permettant la gestion des requètes SQL pour les langues

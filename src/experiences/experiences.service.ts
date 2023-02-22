@@ -6,13 +6,13 @@ import { Experience } from './entities/experience.entity';
 
 /**
  * Ensemble des services pour la table Expériences:
- * * **create**: permet de créer une expérience dans la BDD
- * * **findByExperienceAndUser**: permet de trouver une expérience avec l'id du user dans la BDD
- * * **findAll**: permet de trouver toutes les expériences dans la BDD
- * * **findOne**: permer de trouver une expérience par son id dans la BDD
- * * **findOneByPoste**: permet de trouver une expérience par un intitulé_poste dans la BDD
- * * **update**: permet de modifier une expérience par son id dans la BDD
- * * ** delete**: permet de supprimer une expérience par son id dans la BDD
+ * * **create**                    : permet de créer une expérience dans la BDD
+ * * **findByExperienceAndUser**   : permet de trouver une expérience avec l'id du user dans la BDD
+ * * **findAll**                   : permet de trouver toutes les expériences dans la BDD
+ * * **findOne**                   : permer de trouver une expérience par son id dans la BDD
+ * * **findOneByPoste**            : permet de trouver une expérience par un intitulé_poste dans la BDD
+ * * **update**                    : permet de modifier une expérience par son id dans la BDD
+ * * ** delete**                   : permet de supprimer une expérience par son id dans la BDD
  */
 @Injectable()
 // Class permettant la gestion des requètes SQL pour les expériences

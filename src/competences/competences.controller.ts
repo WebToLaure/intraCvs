@@ -34,7 +34,7 @@ export class CompetencesController {
 
     if (await this.competencesService.findCompetenceAndUser(req.user.userId, createCompetenceDto.competence_clé)) {
 
-      throw new HttpException("Cette compétence existe déjà.", HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException("Cette compétence existe déjà.", HttpStatus.BAD_REQUEST);
     }
 
     const user = await this.usersService.findOne(req.user.userId);
@@ -81,7 +81,7 @@ export class CompetencesController {
       throw new HttpException("Compétence introuvable.", HttpStatus.NOT_FOUND);
     }
     if (await this.competencesService.findCompetenceAndUser(req.user.userId, updateCompetenceDto.competence_clé)) {
-      throw new HttpException("Compétence déjà existante.", HttpStatus.NOT_ACCEPTABLE);
+      throw new HttpException("Compétence déjà existante.", HttpStatus.BAD_REQUEST);
     }
     const update = await this.competencesService.updateComp(id, updateCompetenceDto);
     return {

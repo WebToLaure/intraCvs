@@ -25,7 +25,7 @@ export class LanguesController
 
     if (languageExist)
     {
-      throw new HttpException('La langue existe déjà', HttpStatus.NOT_ACCEPTABLE)
+      throw new HttpException('La langue existe déjà', HttpStatus.BAD_REQUEST)
     }
     // Créer la langue pour le user défini
     const user = await this.usersService.findOne(req.user.userId)

@@ -23,12 +23,12 @@ export class CreateExperienceDto {
     date_début: Date;
 
     @ApiProperty()
-    @IsNumber()
+    @IsString()
     date_fin: Date;
 
 
     @ApiProperty()
-    @IsNumber()
+    @IsString()
     descriptif: string
 
 

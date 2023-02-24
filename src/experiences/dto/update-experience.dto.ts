@@ -8,11 +8,11 @@ export class UpdateExperienceDto extends PartialType(CreateExperienceDto) {
 
 
     @ApiProperty()
-    @IsNumber()
+    @IsString()
     date_début: Date;
 
     @ApiProperty()
-    @IsNumber()
+    @IsString()
     date_fin: Date;
 
 

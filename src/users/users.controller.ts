@@ -37,6 +37,7 @@ export class UsersController
 
 
   @Get()
+  @ApiOperation({ summary: `Récupération de tous les users`})
   async findAll()
   {
     const allUsers = await this.usersService.findAll();
@@ -48,6 +49,7 @@ export class UsersController
   }
 
   @Get(':id')
+  @ApiOperation({ summary: `Récupération d'un user par son id`})
   async findOne(@Param('id') id: number)
   {
     const oneUser = await this.usersService.findOne(id);
@@ -64,14 +66,11 @@ export class UsersController
 
   @UseGuards(JwtAuthGuard)
   @Patch()
+  @ApiOperation({summary: ` Modification d'un user`})
   async updateUser(@Body() updateUserDto: UpdateUserDto,@Request() req){
 
     const account = req.user.id
-    
-    /* const isUserExists = await this.usersService.findOne(account);
-    if( !isUserExists){
-      throw new HttpException(`L'user demandé n'existe pas`, HttpStatus.NOT_FOUND);
-    } */
+  
     const updatedUser = await this.usersService.update(account, updateUserDto);
 
     if (!updatedUser){
@@ -85,8 +84,9 @@ export class UsersController
   }
 
   
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
+  @ApiOperation({summary: ` Modification d'un user par son id`})
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto)
   {
 
@@ -132,7 +132,9 @@ export class UsersController
   }
 
   // Suppression d'un user par son id pour l'admin
-  //@UseGuards(JwtAuthGuard)
+  @ApiOperation({summary: `suppression d'un compte utilisateur par son id`})
+  @ApiResponse({ status: 200, description: 'Compte supprimé' })
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const isUserExists = await this.usersService.findOne(+id);

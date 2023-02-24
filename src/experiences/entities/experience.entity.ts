@@ -13,7 +13,6 @@ export class Experience extends BaseEntity {
     id: number;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         nullable: true,
     })
@@ -21,14 +20,12 @@ export class Experience extends BaseEntity {
 
 
     @ApiProperty()
-    @Exclude()
     @Column({
         nullable: true,
     })
     entreprise: string;
 
     @ApiProperty()
-    @Exclude()
     @Column({
         nullable: true,
     })
@@ -36,7 +33,6 @@ export class Experience extends BaseEntity {
 
 
     @ApiProperty()
-    @Exclude()
     @Column({
         type:"date",
         nullable: true
@@ -44,7 +40,6 @@ export class Experience extends BaseEntity {
     date_début: Date;
 
     @ApiProperty()
-    @Exclude()
     @Column({  
         type:"date",
         nullable: true

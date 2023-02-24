@@ -20,7 +20,7 @@ export class LanguesController
   @Post()
   async create(@Body() createLangueDto: CreateLangueDto, @Request() req)
   {
-    // Vérifier que la langue existe déjà pour le user
+    // Vérifier si la langue existe déjà pour le user
     const languageExist = await this.languesService.findByLanguageAndUser(req.user.userId, createLangueDto.langue);
 
     if (languageExist)
@@ -89,7 +89,7 @@ export class LanguesController
     }
     return {
       statusCode: 200,
-      message: `Récupération réussie de la langue par la donnée ${langue}`,
+      message: `Récupération réussie de la langue par la donnée`,
       data: oneLanguage
     }
   }
@@ -115,7 +115,6 @@ export class LanguesController
       {
         throw new ConflictException('Cette langue existe déjà');
       }
-      //console.log("test",newLanguage);
       
     }
 

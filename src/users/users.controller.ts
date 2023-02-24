@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, Request, ClassSerializerInterceptor, UseInterceptors, BadRequestException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, Request, ClassSerializerInterceptor, UseInterceptors, BadRequestException, UseGuards, ConflictException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { encodePassword } from 'src/utils/bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiResponse, ApiOperation, ApiProperty } from '@nestjs/swagger';
+import { ApiResponse, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 
@@ -13,13 +13,16 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class UsersController
 {
   constructor(private readonly usersService: UsersService) { }
-
+  @ApiTags('Sign Up')
   @Post('register')
   @ApiOperation({ summary: "Création d'un compte utilisateur" })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async create(@Body() createUserDto: CreateUserDto)
   {
-
+    if (createUserDto.password !== createUserDto.password_confirm) {
+      throw new ConflictException("Mots de passe non identiques")
+    }
+    
     const ExistingUser = await this.usersService.findUserByEmail(createUserDto.email);
     if (ExistingUser)
     {
@@ -37,6 +40,7 @@ export class UsersController
 
 
   @Get()
+  @ApiOperation({ summary: `Récupération de tous les users`})
   async findAll()
   {
     const allUsers = await this.usersService.findAll();
@@ -48,6 +52,7 @@ export class UsersController
   }
 
   @Get(':id')
+  @ApiOperation({ summary: `Récupération d'un user par son id`})
   async findOne(@Param('id') id: number)
   {
     const oneUser = await this.usersService.findOne(id);
@@ -64,14 +69,11 @@ export class UsersController
 
   @UseGuards(JwtAuthGuard)
   @Patch()
+  @ApiOperation({summary: ` Modification d'un user`})
   async updateUser(@Body() updateUserDto: UpdateUserDto,@Request() req){
 
     const account = req.user.id
-    
-    /* const isUserExists = await this.usersService.findOne(account);
-    if( !isUserExists){
-      throw new HttpException(`L'user demandé n'existe pas`, HttpStatus.NOT_FOUND);
-    } */
+  
     const updatedUser = await this.usersService.update(account, updateUserDto);
 
     if (!updatedUser){
@@ -85,8 +87,9 @@ export class UsersController
   }
 
   
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
+  @ApiOperation({summary: ` Modification d'un user par son id`})
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto)
   {
 
@@ -132,7 +135,9 @@ export class UsersController
   }
 
   // Suppression d'un user par son id pour l'admin
-  //@UseGuards(JwtAuthGuard)
+  @ApiOperation({summary: `suppression d'un compte utilisateur par son id`})
+  @ApiResponse({ status: 200, description: 'Compte supprimé' })
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const isUserExists = await this.usersService.findOne(+id);

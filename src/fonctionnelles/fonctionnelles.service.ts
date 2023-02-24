@@ -37,7 +37,16 @@ export class FonctionnellesService {
 
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} fonctionnelle`;
+  async deletePresentation(id: number): Promise<Fonctionnelle> {
+
+  const dataDeleted = await Fonctionnelle.findOneBy({ id })
+  await Fonctionnelle.delete({ id });
+
+  if (dataDeleted) {
+    return dataDeleted;
   }
+
+  return undefined;
+}
+
 }

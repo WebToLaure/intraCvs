@@ -80,14 +80,19 @@ export class FonctionnellesController {
   }
 
 
-
-
-
-
-
-
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.fonctionnellesService.remove(+id);
+  async remove(@Param('id') id: number) {
+    const existFonctionnelle = await this.fonctionnellesService.findFonctionnelleById(id);
+
+    if (!existFonctionnelle) {
+      throw new HttpException("Competence Fonctionnelle n'existe pas", HttpStatus.FORBIDDEN)
+    }
+    const deletedPresentation = await this.fonctionnellesService.deletePresentation(id);
+    return {
+      statusCode: 201,
+      data: deletedPresentation,
+      message: "La Competence Fonctionnelle est supprimée",
+    };
   }
 }

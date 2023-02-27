@@ -27,7 +27,7 @@ export class FonctionnellesController {
     return {
       statusCode: 201,
       data: createFonctionnelle,
-      message: "Présentation créée"
+      message: "Compétence Fonctionnelle créée"
     }
   }
 
@@ -36,7 +36,7 @@ export class FonctionnellesController {
     const fonctionnelleExist = await this.fonctionnellesService.findAllFonctionnelle();
 
     if (!fonctionnelleExist) {
-      throw new HttpException("Pas de compétence fonctionnelle créées", HttpStatus.NOT_FOUND);
+      throw new HttpException("Pas de compétence fonctionnelle créée", HttpStatus.NOT_FOUND);
     }
 
     return fonctionnelleExist;
@@ -48,7 +48,7 @@ export class FonctionnellesController {
     const fonctionnelleExist = await this.fonctionnellesService.findFonctionnelleById(+id);
 
     if (!fonctionnelleExist) {
-      throw new HttpException("Pas de compétence fonctionnelle créées avec cet id", HttpStatus.NOT_FOUND);
+      throw new HttpException("Pas de compétence fonctionnelle créée avec cet id", HttpStatus.NOT_FOUND);
     }
 
     return {
@@ -67,7 +67,7 @@ export class FonctionnellesController {
     const existingCompetence = await this.fonctionnellesService.findFonctionnelleById(id);
     
     if (!existingCompetence) {
-      throw new HttpException("Competence Fonctionnelle n'existe pas", HttpStatus.FORBIDDEN)
+      throw new HttpException("Compétence Fonctionnelle n'existe pas", HttpStatus.FORBIDDEN)
     }
 
     const updatedCompetence = await this.fonctionnellesService.updateFonctionnelle(+id, updateFonctionnelleDto);
@@ -75,7 +75,7 @@ export class FonctionnellesController {
     return {
       statusCode: 201,
       data: updatedCompetence,
-      message: "Update Competence Fonctionnelle"
+      message: "Compétence Fonctionnelle modifiée"
     }
   }
 
@@ -86,13 +86,13 @@ export class FonctionnellesController {
     const existFonctionnelle = await this.fonctionnellesService.findFonctionnelleById(id);
 
     if (!existFonctionnelle) {
-      throw new HttpException("Competence Fonctionnelle n'existe pas", HttpStatus.FORBIDDEN)
+      throw new HttpException("Compétence Fonctionnelle n'existe pas", HttpStatus.FORBIDDEN)
     }
     const deletedPresentation = await this.fonctionnellesService.deletePresentation(id);
     return {
       statusCode: 201,
       data: deletedPresentation,
-      message: "La Competence Fonctionnelle est supprimée",
+      message: "La Compétence Fonctionnelle a été supprimée",
     };
   }
 }

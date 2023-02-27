@@ -10,7 +10,7 @@ export class FonctionnellesService {
 
     const fonctionnelle = new Fonctionnelle()
     fonctionnelle.libelle = createFonctionnelleDto.libelle
-    fonctionnelle.user = userLog
+    fonctionnelle.user = userLog // permet d'associer l'user à sa compétence fonctionnelle
 
     await fonctionnelle.save()
 

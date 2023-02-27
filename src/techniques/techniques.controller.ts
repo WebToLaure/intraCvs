@@ -30,14 +30,12 @@ export class TechniquesController {
   @ApiOperation({ summary: "Ajout d'une compétence technique sur CV utilisateur" })
   async createCompTech(@Body() createTechniqueDto: CreateTechniqueDto, @Request() req) {
 
-    if (await this.techniquesService.findCompTechAndUser(req.user.userId, createTechniqueDto.libelle)) {
+    if (await this.techniquesService.findCompTechAndUser(req.user.id, createTechniqueDto.libelle)) {
 
       throw new HttpException("Cette compétence technique existe déjà.", HttpStatus.BAD_REQUEST);
     }
 
-    const user = await this.usersService.findOne(req.user.userId);
-
-    return await this.techniquesService.createCompTech(createTechniqueDto, user);
+    return await this.techniquesService.createCompTech(createTechniqueDto, req.user);
   }
 
   /** 
@@ -78,7 +76,7 @@ export class TechniquesController {
     if (!competenceTech) {
       throw new HttpException("Compétence technique introuvable.", HttpStatus.NOT_FOUND);
     }
-    if (await this.techniquesService.findCompTechAndUser(req.user.userId, updateTechniqueDto.libelle)) {
+    if (await this.techniquesService.findCompTechAndUser(req.user.id, updateTechniqueDto.libelle)) {
       throw new HttpException("Compétence technique déjà existante.", HttpStatus.BAD_REQUEST);
     }
     const update = await this.techniquesService.updateCompTech(id, updateTechniqueDto);

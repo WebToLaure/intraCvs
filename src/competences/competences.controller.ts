@@ -32,14 +32,12 @@ export class CompetencesController {
   @ApiOperation({ summary: "Ajout d'une compétence_clé sur CV utilisateur" })
   async createComp(@Body() createCompetenceDto: CreateCompetenceDto, @Request() req) {
 
-    if (await this.competencesService.findCompetenceAndUser(req.user.userId, createCompetenceDto.competence_clé)) {
+    if (await this.competencesService.findCompetenceAndUser(req.user.id, createCompetenceDto.competence_clé)) {
 
       throw new HttpException("Cette compétence existe déjà.", HttpStatus.BAD_REQUEST);
     }
 
-    const user = await this.usersService.findOne(req.user.userId);
-
-    return await this.competencesService.createComp(createCompetenceDto, user);
+    return await this.competencesService.createComp(createCompetenceDto, req.user);
   }
 
   /** 
@@ -80,7 +78,7 @@ export class CompetencesController {
     if (!competence) {
       throw new HttpException("Compétence introuvable.", HttpStatus.NOT_FOUND);
     }
-    if (await this.competencesService.findCompetenceAndUser(req.user.userId, updateCompetenceDto.competence_clé)) {
+    if (await this.competencesService.findCompetenceAndUser(req.user.id, updateCompetenceDto.competence_clé)) {
       throw new HttpException("Compétence déjà existante.", HttpStatus.BAD_REQUEST);
     }
     const update = await this.competencesService.updateComp(id, updateCompetenceDto);

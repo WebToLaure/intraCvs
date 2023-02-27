@@ -20,12 +20,11 @@ export class CentresInteretsController {
   @Post()
   @ApiOperation({ summary: "Ajout d'un centre d'intérêt sur compte utilisateur" })
   async createInteret(@Body() createCentresInteretDto: CreateCentresInteretDto, @Request() req) {
-    if (await this.centresInteretsService.findInteretAndUser(req.user.userId, createCentresInteretDto.intitule)) {
+    if (await this.centresInteretsService.findInteretAndUser(req.user.id, createCentresInteretDto.intitule)) {
       throw new HttpException("Intérêt déjà renseigné", HttpStatus.BAD_REQUEST);
     }
-    const user = await this.usersService.findOne(req.user.userId);
 
-    return await this.centresInteretsService.createInteret(createCentresInteretDto, user);
+    return await this.centresInteretsService.createInteret(createCentresInteretDto, req.user);
   }
 
   @ApiBody({ type: CreateCentresInteretDto })
@@ -51,7 +50,7 @@ export class CentresInteretsController {
   @Patch(':id')
   @ApiOperation({ summary: "Modification d'un Centre d'Intérêt " })
   async updateInteret(@Param('id') id: string, @Body() updateCentresIneteretDto: UpdateCentresInteretDto, @Request() req) {
-    if (await this.centresInteretsService.findInteretAndUser(req.user.userId, updateCentresIneteretDto.intitule)) {
+    if (await this.centresInteretsService.findInteretAndUser(req.user.id, updateCentresIneteretDto.intitule)) {
       throw new HttpException("Ce centre d'intérêt existe déjà.", HttpStatus.BAD_REQUEST);
     }
     const update = await this.centresInteretsService.updateInteret(+id, updateCentresIneteretDto);

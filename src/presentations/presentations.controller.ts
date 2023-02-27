@@ -4,6 +4,10 @@ import { CreatePresentationDto } from './dto/create-presentation.dto';
 import { UpdatePresentationDto } from './dto/update-presentation.dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
+import { UserGuard } from 'src/auth/user.guard';
+import { User } from 'src/users/entities/user.entity';
+import { UserRoleEnum } from 'src/enum/user-role.enum';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('presentations')
@@ -16,14 +20,11 @@ export class PresentationsController {
   @Post()
   async create(@Body() createPresentationDto: CreatePresentationDto, @Req() req) {
 
-    const userLog = req.user.userId
-    const user = await this.usersService.findOne(userLog);
-
-    if (user.presentation) {
+    if (req.user.presentation) {
       throw new HttpException("Impossible vous avez déjà une présentation", HttpStatus.FORBIDDEN)
     }
 
-    const createdPresentation = await this.presentationsService.createPresentation(user, createPresentationDto);
+    const createdPresentation = await this.presentationsService.createPresentation(req.user, createPresentationDto);
 
     return {
       statusCode: 201,
@@ -33,6 +34,7 @@ export class PresentationsController {
 
   }
 
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Get()
   async findAll() {
     const presentationExist = await this.presentationsService.findAllPresentation();
@@ -65,15 +67,12 @@ export class PresentationsController {
   @Patch()
   async updatePresentation(@Body() updatePresentationDto: UpdatePresentationDto, @Req() req) {
 
-    const userId = req.user.userId // permet de récupérer l'id de l'user
-    const user = await this.usersService.findOne(userId); // permet de récuperer l'intégralité de la composition de l'user
-
-    if (user.presentation == null) { // condition permettant de savoir si la présentation de l'user est null ou si elle existe
+    if (req.user.presentation == null) { // condition permettant de savoir si la présentation de l'user est null ou si elle existe
       throw new HttpException("Impossible veuillez d'abord créer une présentation", HttpStatus.FORBIDDEN)
     }
 
     // const permettant de controller et d'injecter l'id de la présentation de l'user connecté et d'update les data
-    const updatePresentation = await this.presentationsService.updatePresentation(user.presentation.id, updatePresentationDto);
+    const updatePresentation = await this.presentationsService.updatePresentation(req.user.presentation.id, updatePresentationDto);
 
     return {
       statusCode: 201,
@@ -93,7 +92,7 @@ export class PresentationsController {
   @Delete()
   async deletedPresentation(@Req() req) {
 
-    const userLog = req.user.userId
+    const userLog = req.user.id
     const user = await this.usersService.findOne(userLog);
 
     // check user presentation

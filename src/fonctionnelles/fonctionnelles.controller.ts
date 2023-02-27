@@ -19,10 +19,7 @@ export class FonctionnellesController {
   @Post()
   async create(@Body() createFonctionnelleDto: CreateFonctionnelleDto, @Req() req) {
 
-    const userLog = req.user.userId // récupération de l'id de l'user logger
-    const user = await this.usersService.findOne(userLog); // récupération de l'user et de ses données
-
-    const createFonctionnelle = await this.fonctionnellesService.createFonctionnelle(user, createFonctionnelleDto); //controlle les données de creation et les inject ensuite dans la bdd
+    const createFonctionnelle = await this.fonctionnellesService.createFonctionnelle(req.user, createFonctionnelleDto); //controlle les données de creation et les inject ensuite dans la bdd
 
     return {
       statusCode: 201,

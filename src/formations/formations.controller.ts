@@ -19,13 +19,12 @@ export class FormationsController {
   @ApiOperation({ summary: "Ajout d'une formation sur CV utilisateur" })
   async createFormation(@Body() createFormationDto: CreateFormationDto, @Request() req) {
 
-    if (await this.formationsService.findByFormationAndUser(req.user.userId, createFormationDto.specialite)) {
+    if (await this.formationsService.findByFormationAndUser(req.user.id, createFormationDto.specialite)) {
 
       throw new HttpException("Formation déjà renseignée", HttpStatus.BAD_REQUEST);
     }
-    const user = await this.usersService.findOne(req.user.userId);
 
-    return await this.formationsService.createFormation(createFormationDto, user);
+    return await this.formationsService.createFormation(createFormationDto, req.user);
   }
 
 
@@ -49,7 +48,7 @@ export class FormationsController {
   @Get(':id')
   @ApiOperation({ summary: "Récupération d'une formation sur CV utilisateur par son id" })
   async findFormationById(@Param('id', ParseIntPipe) id: number, @Request() req) {
-    const formation = await this.formationsService.findFormationById(id, req.user.userId);
+    const formation = await this.formationsService.findFormationById(id, req.user.id);
     if (!formation) {
       throw new HttpException("cette formation n'existe pas", HttpStatus.NOT_FOUND);
     }
@@ -72,7 +71,7 @@ export class FormationsController {
   @Patch(':id')
   @ApiOperation({ summary: "Modification d'une Formation du CV utilisateur" })
   async updateFormation(@Param('id') id: string, @Body() updateFormationDto: UpdateFormationDto, @Request() req) {
-    if (await this.formationsService.findByFormationAndUser(req.user.userId, updateFormationDto.specialite)) {
+    if (await this.formationsService.findByFormationAndUser(req.user.id, updateFormationDto.specialite)) {
       throw new HttpException("Formation déjà existante.", HttpStatus.BAD_REQUEST);
     }
     const update = await this.formationsService.update(+id, updateFormationDto);
@@ -89,7 +88,7 @@ export class FormationsController {
   @ApiOperation({ summary: "Suppression d'une formation du CV utilisateur" })
   async deleteFormation(@Param('id', ParseIntPipe) id: number, @Request() req) {
 
-    const formation = await this.formationsService.findFormationById(id, req.user.userId);
+    const formation = await this.formationsService.findFormationById(id, req.user.id);
 
     if (!formation) {
 

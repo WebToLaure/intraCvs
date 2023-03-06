@@ -7,7 +7,7 @@ import { CentresInteret } from './entities/centres_interet.entity';
 export class CentresInteretsService {
   async createInteret(createCentresInteretDto: CreateCentresInteretDto, user: User) {
     const Interets = CentresInteret.create({ ...createCentresInteretDto });
-    delete user.password
+    delete user.password;
     Interets.user = user;
     return await Interets.save()
   }

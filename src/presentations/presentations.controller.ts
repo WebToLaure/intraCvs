@@ -9,6 +9,13 @@ import { UserGuard } from 'src/auth/user.guard';
 import { User } from 'src/users/entities/user.entity';
 import { UserRoleEnum } from 'src/enum/user-role.enum';
 
+/**
+ * @class PresentationsController
+ * Une class permettant :
+ * * De réunir plusieurs méthodes CRUD liées à la partie présentation du CV.
+ * * De contrôler les informations entrantes, de les vérifier avant de les envoyer en base de données, suivant un protocole précis et renseigné.
+ * * Celle-ci est dédiée à la création des présentations, à la recherche via des critères, à la modifification / maj de données et à la suppression d'une présentation.
+ */
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('presentations')
 export class PresentationsController {
@@ -16,6 +23,14 @@ export class PresentationsController {
     private readonly usersService: UsersService) { }
 
 
+  /** 
+   * @method create :
+   * 
+   * Une méthode permettant de :
+   * * Controler les données entrantes lors de la création d'une présentation.
+   * * Vérifier et imposer que les contraintes soient bien respectées.
+   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
+   */
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createPresentationDto: CreatePresentationDto, @Req() req) {
@@ -34,6 +49,13 @@ export class PresentationsController {
 
   }
 
+  /** 
+  * @method findAll :
+  * 
+  * Une méthode permettant de :
+  * * Controler les données entrantes lors de la consultation de toutes les présentations.
+  * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
+  */
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Get()
   async findAll() {
@@ -47,6 +69,13 @@ export class PresentationsController {
 
   }
 
+  /** 
+  * @method findOne :
+  * 
+  * Une méthode permettant de :
+  * * Controler les données entrantes lors de la consultation d'une présentation par son Id.
+  * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
+  */
   @Get(':id')
   async findOne(@Param('id') id: string) {
 
@@ -63,6 +92,14 @@ export class PresentationsController {
     }
   }
 
+  /** 
+  * @method update :
+  * 
+  * Une méthode permettant de :
+  * * Controler les données entrantes lors de la modification d'une présentation.
+  * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
+  * * L'user doit être loger pour modifier sa présentation.
+  */
   @UseGuards(JwtAuthGuard)
   @Patch()
   async updatePresentation(@Body() updatePresentationDto: UpdatePresentationDto, @Req() req) {

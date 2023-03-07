@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {  //fonction qui démarre notre appli
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   const config = new DocumentBuilder()
   .setTitle('Intra-CVS API')
   .setDescription('API CREATION CV')
@@ -20,7 +20,7 @@ app.useGlobalPipes(new ValidationPipe({
     forbidNonWhitelisted: true,
 
   }))
-  await app.listen (3000);
+  await app.listen (8000);
 };
 
 bootstrap();

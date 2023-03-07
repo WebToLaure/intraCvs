@@ -104,7 +104,7 @@ export class LanguesController
 
   // Modifier une langue
   @ApiOperation({ summary: `Modification d'une langue par son id`})
-  @UseGuards(JwtAuthGuard)
+  override@UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(@Param('id') id: number, @Body() updateLangueDto: UpdateLangueDto)
   {
@@ -140,7 +140,7 @@ export class LanguesController
 
   // Supprimer une langue
   @ApiOperation({ summary: `Suppression de la langue par son id`})
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string)
   {

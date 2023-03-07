@@ -1,37 +1,138 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, HttpException, HttpStatus, ClassSerializerInterceptor, BadRequestException } from '@nestjs/common';
 import { FonctionnellesService } from './fonctionnelles.service';
 import { CreateFonctionnelleDto } from './dto/create-fonctionnelle.dto';
 import { UpdateFonctionnelleDto } from './dto/update-fonctionnelle.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { UsersService } from 'src/users/users.service';
+import { UseInterceptors } from '@nestjs/common/decorators';
 
-
+/**
+ * @class PresentationsController
+ * 
+ * Une class permettant :
+ * * De réunir plusieurs méthodes CRUD liées à la partie des compétences fonctionnelles du CV.
+ * * De contrôler les informations entrantes, de les vérifier avant de les envoyer en base de données, suivant un protocole précis et renseigné.
+ * * Celle-ci est dédiée à la création des compétences fonctionnelles, à la recherche via des critères, à la modifification / maj de données.
+ */
 @ApiTags('FONCTIONNELLES')
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('fonctionnelles')
 export class FonctionnellesController {
-  constructor(private readonly fonctionnellesService: FonctionnellesService) {}
+  constructor(private readonly fonctionnellesService: FonctionnellesService,
+    private readonly usersService: UsersService) {}
 
+  /** 
+   * @method create :
+   * 
+   * Une méthode permettant de :
+   * * Controler les données entrantes lors de la création d'une compétence fonctionnelle.
+   * * Vérifier et imposer que les contraintes soient bien respectées.
+   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
+   */
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createFonctionnelleDto: CreateFonctionnelleDto) {
-    return this.fonctionnellesService.create(createFonctionnelleDto);
+  async create(@Body() createFonctionnelleDto: CreateFonctionnelleDto, @Req() req) {
+
+    const createFonctionnelle = await this.fonctionnellesService.createFonctionnelle(req.user, createFonctionnelleDto); //controlle les données de creation et les inject ensuite dans la bdd
+
+    return {
+      statusCode: 201,
+      data: createFonctionnelle,
+      message: "Compétence Fonctionnelle créée"
+    }
   }
 
+  /** 
+  * @method findAllCompetencFonctionnelle :
+  * 
+  * Une méthode permettant de :
+  * * Controler les données entrantes lors de la consultation de toutes les compétences fonctionnelles.
+  * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
+  */
   @Get()
-  findAll() {
-    return this.fonctionnellesService.findAll();
+  async findAllCompetencFonctionnelle() {
+    const fonctionnelleExist = await this.fonctionnellesService.findAllFonctionnelle();
+
+    if (!fonctionnelleExist) {
+      throw new HttpException("Pas de compétence fonctionnelle créée", HttpStatus.NOT_FOUND);
+    }
+
+    return fonctionnelleExist;
   }
 
+  /** 
+  * @method findOneCompetencFonctionnelle :
+  * 
+  * Une méthode permettant de :
+  * * Controler les données entrantes lors de la consultation d'une compétences fonctionnelle par son Id.
+  * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
+  */
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.fonctionnellesService.findOne(+id);
+  async findOneCompetencFonctionnelle(@Param('id') id: string) {
+
+    const fonctionnelleExist = await this.fonctionnellesService.findFonctionnelleById(+id);
+
+    if (!fonctionnelleExist) {
+      throw new HttpException("Pas de compétence fonctionnelle créée avec cet id", HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      statusCode: 200,
+      data: fonctionnelleExist,
+      message: "Voici votre compétence fonctionnelle"
+    }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFonctionnelleDto: UpdateFonctionnelleDto) {
-    return this.fonctionnellesService.update(+id, updateFonctionnelleDto);
+  /** 
+  * @method update :
+  * 
+  * Une méthode permettant de :
+  * * Controler les données entrantes lors de la modification d'une compétence fonctionnelle.
+  * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
+  * * L'user doit être loger pour modifier ses compétencs fonctionnelles.
+  */
+  @UseGuards(JwtAuthGuard)
+  @Patch('update/:id')
+  async update(
+    @Param('id') id: number, @Body() updateFonctionnelleDto: UpdateFonctionnelleDto, @Req() req) {
+    
+    const existingCompetence = await this.fonctionnellesService.findFonctionnelleById(id);
+    
+    if (!existingCompetence) {
+      throw new HttpException("Compétence Fonctionnelle n'existe pas", HttpStatus.FORBIDDEN)
+    }
+
+    const updatedCompetence = await this.fonctionnellesService.updateFonctionnelle(+id, updateFonctionnelleDto);
+    
+    return {
+      statusCode: 201,
+      data: updatedCompetence,
+      message: "Compétence Fonctionnelle modifiée"
+    }
   }
 
+  /** 
+  * @method remove :
+  * 
+  * Une méthode permettant de :
+  * * Controler les données entrantes lors de la suppression d'une compétence fonctionnelle'.
+  * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
+  * * Le développeur doit être loger pour pouvoir supprimer sa compétence fonctionnelle.
+  */
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.fonctionnellesService.remove(+id);
+  async remove(@Param('id') id: number) {
+    const existFonctionnelle = await this.fonctionnellesService.findFonctionnelleById(id);
+
+    if (!existFonctionnelle) {
+      throw new HttpException("Compétence Fonctionnelle n'existe pas", HttpStatus.FORBIDDEN)
+    }
+    const deletedPresentation = await this.fonctionnellesService.deletePresentation(id);
+    return {
+      statusCode: 201,
+      data: deletedPresentation,
+      message: "La Compétence Fonctionnelle a été supprimée",
+    };
   }
 }

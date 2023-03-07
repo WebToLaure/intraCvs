@@ -25,14 +25,14 @@ export class ExperiencesController
   async create(@Body() createExperienceDto: CreateExperienceDto, @Request() req)
   {
     // Vérifier si l'expérience existe déjà pour le user
-    const experienceExist = await this.experiencesService.findByExperienceAndUser(req.user.userId, createExperienceDto.intitulé_poste)
+    const experienceExist = await this.experiencesService.findByExperienceAndUser(req.user.id, createExperienceDto.intitulé_poste)
     if (experienceExist)
     {
       throw new HttpException('L\'expérience existe déjà', HttpStatus.NOT_ACCEPTABLE)
     }
     // Créer l'expérience pour le user défini
-    const user = await this.usersService.findOne(req.user.userId)
-    const newExperience = await this.experiencesService.create(createExperienceDto, user)
+    
+    const newExperience = await this.experiencesService.create(createExperienceDto, req.user)
     return {
       statusCode: 201,
       message: `Création d'une nouvelle expérience`,

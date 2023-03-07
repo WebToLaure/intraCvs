@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, Request, ClassSerializerInterceptor, UseInterceptors, BadRequestException, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException, Request, ClassSerializerInterceptor, UseInterceptors, BadRequestException, UseGuards, ConflictException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { encodePassword } from 'src/utils/bcrypt';
@@ -19,7 +19,10 @@ export class UsersController
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async create(@Body() createUserDto: CreateUserDto)
   {
-
+    if (createUserDto.password !== createUserDto.password_confirm) {
+      throw new ConflictException("Mots de passe non identiques")
+    }
+    
     const ExistingUser = await this.usersService.findUserByEmail(createUserDto.email);
     if (ExistingUser)
     {

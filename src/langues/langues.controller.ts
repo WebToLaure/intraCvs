@@ -25,15 +25,15 @@ export class LanguesController
   async create(@Body() createLangueDto: CreateLangueDto, @Request() req)
   {
     // Vérifier si la langue existe déjà pour le user
-    const languageExist = await this.languesService.findByLanguageAndUser(req.user.userId, createLangueDto.langue);
+    const languageExist = await this.languesService.findByLanguageAndUser(req.user.id, createLangueDto.langue);
 
     if (languageExist)
     {
-      throw new HttpException('La langue existe déjà', HttpStatus.NOT_ACCEPTABLE)
+      throw new HttpException('La langue existe déjà', HttpStatus.BAD_REQUEST)
     }
     // Créer la langue pour le user défini
-    const user = await this.usersService.findOne(req.user.userId)
-    const newLanguage = await this.languesService.create(createLangueDto, user);
+    
+    const newLanguage = await this.languesService.create(createLangueDto, req.user);
 
     return {
       statusCode: 201,

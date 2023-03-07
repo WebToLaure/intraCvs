@@ -7,7 +7,7 @@ import { CentresInteret } from './entities/centres_interet.entity';
 export class CentresInteretsService {
   async createInteret(createCentresInteretDto: CreateCentresInteretDto, user: User) {
     const Interets = CentresInteret.create({ ...createCentresInteretDto });
-    delete user.password
+    delete user.password;
     Interets.user = user;
     return await Interets.save()
   }
@@ -35,8 +35,8 @@ export class CentresInteretsService {
 
   }
 
-  async findInteretAndUser(userId: number, intitule: string) {
-    return await CentresInteret.findOne({ where: { user: { id: userId }, intitule: intitule } });
+  async findInteretAndUser(id: number, intitule: string) {
+    return await CentresInteret.findOne({ where: { user: { id: id }, intitule: intitule } });
   }
 
 }

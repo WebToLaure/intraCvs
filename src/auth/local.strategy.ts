@@ -13,13 +13,13 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(email: string, password: string): Promise<any> {
+  async validate(email: string, password: string, id : number): Promise<any> {
 
-    const emailGoodWrited = await User.findOneBy({email})
+    const emailGoodWrited = await User.findOneBy({ email })
 
-        if(emailGoodWrited === null){
-            throw new HttpException("Mauvais pseudo ou password", HttpStatus.NOT_ACCEPTABLE);
-        }
+    if (emailGoodWrited === null) { // permet de renvoyer un message d'erreur en cas de lors de la connexion si l'email est mal renseigné
+      throw new HttpException("Mauvais Email ou password", HttpStatus.NOT_ACCEPTABLE);
+    }
 
     const user = await this.authService.validateUser(email, password);
 

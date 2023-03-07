@@ -101,6 +101,12 @@ export class CompetencesController {
 
     const competence = await this.competencesService.findCompetenceById(id);
 
+    if (!competence) {
+
+      throw new HttpException("Competence introuvable.", HttpStatus.NOT_FOUND);
+
+    }
+
     if (await this.competencesService.deleteComp(id)) {
 
       throw new HttpException("Compétence supprimée.", HttpStatus.OK);

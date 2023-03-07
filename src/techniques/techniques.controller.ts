@@ -98,7 +98,10 @@ export class TechniquesController {
   async deleteCompTech(@Param('id', ParseIntPipe) id: number, @Request() req) {
 
     const competence = await this.techniquesService.findCompTechById(id);
+    if (!competence) {
 
+      throw new HttpException("Competence introuvable.", HttpStatus.NOT_FOUND);
+    }
     if (await this.techniquesService.deleteCompTech(id)) {
 
       throw new HttpException("Compétence technique supprimée.", HttpStatus.OK);

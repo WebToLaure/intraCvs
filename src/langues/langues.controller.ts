@@ -10,6 +10,7 @@ import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags(`LANGUES`)
 @Controller('langues')
+@UseGuards(JwtAuthGuard)
 export class LanguesController
 {
   constructor(private readonly languesService: LanguesService,
@@ -20,7 +21,6 @@ export class LanguesController
   // Création de la langue avec messages d'erreur
   @ApiBody({ type: CreateLangueDto})
   @ApiOperation({ summary: `Ajout d'une langue sur un compte utilisateur`})
-  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createLangueDto: CreateLangueDto, @Request() req)
   {
@@ -104,7 +104,6 @@ export class LanguesController
 
   // Modifier une langue
   @ApiOperation({ summary: `Modification d'une langue par son id`})
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(@Param('id') id: number, @Body() updateLangueDto: UpdateLangueDto)
   {
@@ -140,7 +139,6 @@ export class LanguesController
 
   // Supprimer une langue
   @ApiOperation({ summary: `Suppression de la langue par son id`})
-  //@UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string)
   {

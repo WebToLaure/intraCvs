@@ -13,7 +13,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 * * Création, Recherche via certains critères, Modifification des données , Suppression d'une compétence.
 */
 
-@ApiTags('TECHNIQUES')
+@ApiTags('COMPETENCES TECHNIQUES')
 @Controller('techniques')
 export class TechniquesController {
   constructor(private readonly techniquesService: TechniquesService,

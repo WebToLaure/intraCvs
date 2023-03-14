@@ -15,7 +15,7 @@ import { UseInterceptors } from '@nestjs/common/decorators';
  * * De contrôler les informations entrantes, de les vérifier avant de les envoyer en base de données, suivant un protocole précis et renseigné.
  * * Celle-ci est dédiée à la création des compétences fonctionnelles, à la recherche via des critères, à la modifification / maj de données.
  */
-@ApiTags('FONCTIONNELLES')
+@ApiTags('COMPETENCES FONCTIONNELLES')
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('fonctionnelles')
 export class FonctionnellesController {

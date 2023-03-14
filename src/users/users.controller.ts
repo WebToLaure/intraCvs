@@ -5,9 +5,10 @@ import { encodePassword } from 'src/utils/bcrypt';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiResponse, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { refCount } from 'rxjs';
 
 
-
+@ApiTags('USERS')
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
 export class UsersController

@@ -10,7 +10,7 @@ import { UpdateCentresInteretDto } from './dto/update-centres_interet.dto';
 import { UsersService } from 'src/users/users.service';
 
 
-@ApiTags("INTERETS")
+@ApiTags("CENTRES D'INTERETS")
 @Controller('Interets')
 @UseInterceptors(ClassSerializerInterceptor)
 export class CentresInteretsController {

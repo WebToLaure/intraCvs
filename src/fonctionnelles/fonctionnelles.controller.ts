@@ -57,8 +57,12 @@ export class FonctionnellesController {
     if (!fonctionnelleExist) {
       throw new HttpException("Pas de compétence fonctionnelle créée", HttpStatus.NOT_FOUND);
     }
-
-    return fonctionnelleExist;
+    return {
+      statusCode: 200,
+      data: fonctionnelleExist,
+      message: "Ensemble des Compétences Fonctionnelles "
+    }
+   
   }
 
   /** 
@@ -130,7 +134,7 @@ export class FonctionnellesController {
     }
     const deletedPresentation = await this.fonctionnellesService.deletePresentation(id);
     return {
-      statusCode: 201,
+      statusCode: 200,
       data: deletedPresentation,
       message: "La Compétence Fonctionnelle a été supprimée",
     };

@@ -118,7 +118,7 @@ export class ExperiencesController
     // Modifier l'expérience concernée
     const updatedExperience = await this.experiencesService.update(+id, updateExperienceDto);
     return {
-      statusCode: 201,
+      statusCode: 200,
       message: `L'expérience a été modifiée`,
       data: updatedExperience
     }
@@ -141,7 +141,7 @@ export class ExperiencesController
     // Supprimer l'expérience concernée
     const deletedExperience = await this.experiencesService.remove(+id);
     return{
-      statusCode: 201,
+      statusCode: 200,
       message: `Suppression de l'expérience réussie`,
       data: deletedExperience
     }

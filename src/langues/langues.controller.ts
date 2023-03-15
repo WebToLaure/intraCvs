@@ -25,7 +25,7 @@ export class LanguesController
   async create(@Body() createLangueDto: CreateLangueDto, @Request() req)
   {
     // Vérifier si la langue existe déjà pour le user
-    const languageExist = await this.languesService.findByLanguageAndUser(req.user.id, createLangueDto.langue);
+    const languageExist = await this.languesService.findByLanguageAndUser(req.user.userId, createLangueDto.langue);
 
     if (languageExist)
     {
@@ -129,7 +129,7 @@ export class LanguesController
     // Modifier la langue concernée
     const updatedLanguage = await this.languesService.update(+id, updateLangueDto);
     return {
-      statusCode: 201,
+      statusCode: 200,
       message: `La langue a été modifiée`,
       data: updatedLanguage
     }
@@ -152,7 +152,7 @@ export class LanguesController
     const deletedLanguage = await this.languesService.remove(+id);
 
     return {
-      statusCode: 201,
+      statusCode: 200,
       message: `Suppression de la langue réussie`,
       data: deletedLanguage
     }

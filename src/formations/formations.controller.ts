@@ -24,7 +24,13 @@ export class FormationsController {
       throw new HttpException("Formation déjà renseignée", HttpStatus.BAD_REQUEST);
     }
 
-    return await this.formationsService.createFormation(createFormationDto, req.user);
+    const response = await this.formationsService.createFormation(createFormationDto, req.user);
+    return {
+      statusCode: 201,
+      data: response,
+      message: "Formation ajoutée"
+    }
+
   }
 
 
@@ -39,9 +45,12 @@ export class FormationsController {
       throw new HttpException("aucune formation trouvée", HttpStatus.NOT_FOUND);
     }
 
-    return allFormations;
+    return {
+      statusCode: 200,
+      data: allFormations,
+      message: "Ensemble des formations de votre cv"
+    }
   }
-
 
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(ClassSerializerInterceptor)
@@ -52,10 +61,12 @@ export class FormationsController {
     if (!formation) {
       throw new HttpException("cette formation n'existe pas", HttpStatus.NOT_FOUND);
     }
-    return formation;
+    return {
+      statusCode: 200,
+      data: formation,
+      message: "Votre formation"
+    }
   }
-
-
   @UseGuards(JwtAuthGuard)
   @Get('specialite/:name')
   @ApiOperation({ summary: "Récupération d'une formation par son nom " })
@@ -64,7 +75,11 @@ export class FormationsController {
     if (!formation) {
       throw new HttpException("Aucune formation trouvée", HttpStatus.NOT_FOUND);
     }
-    return formation;
+    return {
+      statusCode: 200,
+      message: "votre formation ",
+      data: formation
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -75,7 +90,6 @@ export class FormationsController {
       throw new HttpException("Formation déjà existante.", HttpStatus.BAD_REQUEST);
     }
     const update = await this.formationsService.update(+id, updateFormationDto);
-
     return {
       statusCode: 200,
       message: "votre formation a bien été modifiée",
@@ -87,18 +101,15 @@ export class FormationsController {
   @Delete(':id')
   @ApiOperation({ summary: "Suppression d'une formation du CV utilisateur" })
   async deleteFormation(@Param('id', ParseIntPipe) id: number, @Request() req) {
-
     const formation = await this.formationsService.findFormationById(id, req.user.id);
-
     if (!formation) {
-
       throw new HttpException("Formation introuvable.", HttpStatus.NOT_FOUND);
     }
-
-    if (await this.formationsService.deleteFormation(id)) {
-
-      throw new HttpException("Formation supprimée.", HttpStatus.OK);
+    const response = await this.formationsService.deleteFormation(id)
+    return {
+      statusCode: 200,
+      data: response,
+      message: "La Formation a été supprimée",
     }
-    throw new HttpException("Suppression impossible.", HttpStatus.BAD_REQUEST);
   }
 }

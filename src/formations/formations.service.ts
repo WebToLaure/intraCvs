@@ -14,8 +14,8 @@ export class FormationsService {
     return await formations.save()
   }
 
-  async findAllFormations(): Promise<Formation[]> {
-    return await Formation.find();
+  async findAllFormations(id: number): Promise<Formation[]> {
+    return await Formation.find({ where: { user: { id: id } } });
   }
 
   async findFormationById(id: number, user: User) {

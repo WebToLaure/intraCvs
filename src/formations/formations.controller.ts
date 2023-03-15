@@ -38,9 +38,12 @@ export class FormationsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   @ApiOperation({ summary: "Récupération de l'ensemble des formations des CV utilisateurs" })
-  async findAllForm() {
+  async findAllForm(@Request() req) {
 
-    const allFormations = await this.formationsService.findAllFormations();
+
+    const allFormations = await this.formationsService.findAllFormations(req.user.id);
+    console.log(allFormations);
+    
     if (!allFormations) {
       throw new HttpException("aucune formation trouvée", HttpStatus.NOT_FOUND);
     }
@@ -108,8 +111,9 @@ export class FormationsController {
     const response = await this.formationsService.deleteFormation(id)
     return {
       statusCode: 200,
-      data: response,
       message: "La Formation a été supprimée",
+      data: response,
+      
     }
   }
 }

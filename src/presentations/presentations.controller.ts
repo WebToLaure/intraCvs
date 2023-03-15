@@ -8,6 +8,7 @@ import { AdminGuard } from 'src/auth/admin.guard';
 import { UserGuard } from 'src/auth/user.guard';
 import { User } from 'src/users/entities/user.entity';
 import { UserRoleEnum } from 'src/enum/user-role.enum';
+import { ConsultantGuard } from 'src/auth/consultant.guard';
 
 /**
  * @class PresentationsController
@@ -56,7 +57,7 @@ export class PresentationsController {
   * * Controler les données entrantes lors de la consultation de toutes les présentations.
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
   */
-  @UseGuards(JwtAuthGuard, AdminGuard)
+  @UseGuards(JwtAuthGuard, ConsultantGuard)
   @Get()
   async findAll() {
     const presentationExist = await this.presentationsService.findAllPresentation();

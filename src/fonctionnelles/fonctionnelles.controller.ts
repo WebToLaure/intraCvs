@@ -6,6 +6,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UsersService } from 'src/users/users.service';
 import { UseInterceptors } from '@nestjs/common/decorators';
+import { ConsultantGuard } from 'src/auth/consultant.guard';
 
 /**
  * @class PresentationsController

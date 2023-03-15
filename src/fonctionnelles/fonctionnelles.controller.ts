@@ -84,7 +84,7 @@ export class FonctionnellesController {
     return {
       statusCode: 200,
       data: fonctionnelleExist,
-      message: "Voici votre compétence fonctionnelle"
+      message: "Compétence fonctionnelle"
     }
   }
 
@@ -110,7 +110,7 @@ export class FonctionnellesController {
     const updatedCompetence = await this.fonctionnellesService.updateFonctionnelle(+id, updateFonctionnelleDto);
     
     return {
-      statusCode: 201,
+      statusCode: 200,
       data: updatedCompetence,
       message: "Compétence Fonctionnelle modifiée"
     }

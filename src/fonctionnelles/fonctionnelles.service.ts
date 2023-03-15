@@ -59,11 +59,10 @@ export class FonctionnellesService {
   }
 
   /** 
-  * @method deletePresentation :
-  * Method permettant de supprimer la présentation de l'utlisateur connecté.
-  * Avec cette méthode impossible qu'un utilisateur puisse supprimer une autre présentation que la sienne.
+  * @method deleteFonctionnelle :
+  * Method permettant de supprimer une compétence fonctionnelle de l'utlisateur connecté.
   */
-  async deletePresentation(id: number): Promise<Fonctionnelle> {
+  async deletedFonctionnelle(id: number): Promise<Fonctionnelle> {
 
     const dataDeleted = await Fonctionnelle.findOneBy({ id })
     await Fonctionnelle.delete({ id });

@@ -132,10 +132,10 @@ export class FonctionnellesController {
     if (!existFonctionnelle) {
       throw new HttpException("Compétence Fonctionnelle n'existe pas", HttpStatus.FORBIDDEN)
     }
-    const deletedPresentation = await this.fonctionnellesService.deletePresentation(id);
+    const deletedFonctionnelle = await this.fonctionnellesService.deletedFonctionnelle(id);
     return {
       statusCode: 200,
-      data: deletedPresentation,
+      data: deletedFonctionnelle,
       message: "La Compétence Fonctionnelle a été supprimée",
     };
   }

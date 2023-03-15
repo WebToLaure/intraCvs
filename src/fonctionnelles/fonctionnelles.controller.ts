@@ -15,7 +15,7 @@ import { UseInterceptors } from '@nestjs/common/decorators';
  * * De contrôler les informations entrantes, de les vérifier avant de les envoyer en base de données, suivant un protocole précis et renseigné.
  * * Celle-ci est dédiée à la création des compétences fonctionnelles, à la recherche via des critères, à la modifification / maj de données.
  */
-@ApiTags('FONCTIONNELLES')
+@ApiTags('COMPETENCES FONCTIONNELLES')
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('fonctionnelles')
 export class FonctionnellesController {
@@ -57,8 +57,12 @@ export class FonctionnellesController {
     if (!fonctionnelleExist) {
       throw new HttpException("Pas de compétence fonctionnelle créée", HttpStatus.NOT_FOUND);
     }
-
-    return fonctionnelleExist;
+    return {
+      statusCode: 200,
+      data: fonctionnelleExist,
+      message: "Ensemble des Compétences Fonctionnelles "
+    }
+   
   }
 
   /** 
@@ -130,7 +134,7 @@ export class FonctionnellesController {
     }
     const deletedPresentation = await this.fonctionnellesService.deletePresentation(id);
     return {
-      statusCode: 201,
+      statusCode: 200,
       data: deletedPresentation,
       message: "La Compétence Fonctionnelle a été supprimée",
     };

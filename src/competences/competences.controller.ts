@@ -25,14 +25,15 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
  * * Contrôle des requêtes entrantes , Vérification avant envoi en base de données, invoque le service.
  * * Création, Recherche via certains critères, Modifification des données , Suppression d'une compétence.
  */
-
 @ApiTags('AUTRES COMPETENCES')
 @Controller('competences')
 export class CompetencesController {
   constructor(
     private readonly competencesService: CompetencesService,
     private readonly usersService: UsersService,
-  ) {}
+  ) { }
+
+
 
   /**
    * @method createComp:
@@ -43,27 +44,19 @@ export class CompetencesController {
   @UseGuards(JwtAuthGuard)
   @Post()
   @ApiOperation({ summary: "Ajout d'une compétence_clé sur CV utilisateur" })
-  async createComp(
-    @Body() createCompetenceDto: CreateCompetenceDto,
-    @Request() req,
-  ) {
-    if (
-      await this.competencesService.findCompetenceAndUser(
-        req.user.id,
-        createCompetenceDto.competence_clé,
-      )
-    ) {
-      throw new HttpException(
-        'Cette compétence existe déjà.',
-        HttpStatus.BAD_REQUEST,
-      );
+  async createComp(@Body() createCompetenceDto: CreateCompetenceDto, @Request() req) {
+    if (await this.competencesService.findCompetenceAndUser(req.user.id, createCompetenceDto.competence_clé)) {
+      throw new HttpException('Cette compétence existe déjà.', HttpStatus.BAD_REQUEST);
     }
-
-    return await this.competencesService.createComp(
-      createCompetenceDto,
-      req.user,
-    );
+    const response = await this.competencesService.createComp(createCompetenceDto, req.user);
+    return {
+      statusCode: 201,
+      data: response,
+      message: "Soft Skill ajouté"
+    }
   }
+
+
 
   /**
    * @method findAllComp:
@@ -75,9 +68,20 @@ export class CompetencesController {
   @ApiOperation({
     summary: 'Recherche des compétences_clés sur CV utilisateurs',
   })
-  async findAllComp() {
-    return await this.competencesService.findAllCompetences();
+  async findAllComp(@Request() req) {
+    const allCompetences = await this.competencesService.findAllCompetences(req.user.id);
+    console.log(allCompetences);
+    if (!allCompetences) {
+      throw new HttpException("aucune soft skill trouvé", HttpStatus.NOT_FOUND);
+    }
+    return {
+      statusCode: 200,
+      data: allCompetences,
+      message: "Ensemble des soft skills de votre cv"
+    }
   }
+
+
 
   /**
    * @method findCompetenceById:
@@ -87,9 +91,19 @@ export class CompetencesController {
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   @ApiOperation({ summary: "Recherche d'une compétence_clé sur CV par id" })
-  findCompetenceById(@Param('id', ParseIntPipe) id: number) {
-    return this.competencesService.findCompetenceById(id);
+  async findCompetenceById(@Param('id', ParseIntPipe) id: number, @Request() req) {
+    const formation = await this.competencesService.findCompetenceById(id, req.user.id);
+    if (!formation) {
+      throw new HttpException("ce soft skill n'existe pas", HttpStatus.NOT_FOUND);
+    }
+    return {
+      statusCode: 200,
+      data: formation,
+      message: "Votre soft skill"
+    }
   }
+
+
 
   /**
    * @method updateComp:
@@ -102,36 +116,23 @@ export class CompetencesController {
   @ApiOperation({
     summary: "Modification d'une compétence_clé sur CV utilisateur",
   })
-  async updateComp(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateCompetenceDto: UpdateCompetenceDto,
-    @Request() req,
-  ) {
-    const competence = await this.competencesService.findCompetenceById(id);
+  async updateComp(@Param('id', ParseIntPipe) id: number, @Body() updateCompetenceDto: UpdateCompetenceDto, @Request() req) {
+    const competence = await this.competencesService.findCompetenceById(id, req.user.id);
     if (!competence) {
       throw new HttpException('Compétence introuvable.', HttpStatus.NOT_FOUND);
     }
-    if (
-      await this.competencesService.findCompetenceAndUser(
-        req.user.id,
-        updateCompetenceDto.competence_clé,
-      )
-    ) {
-      throw new HttpException(
-        'Compétence déjà existante.',
-        HttpStatus.BAD_REQUEST,
-      );
+    if (await this.competencesService.findCompetenceAndUser(req.user.id, updateCompetenceDto.competence_clé)) {
+      throw new HttpException('Compétence déjà existante.', HttpStatus.BAD_REQUEST);
     }
-    const update = await this.competencesService.updateComp(
-      id,
-      updateCompetenceDto,
-    );
+    const update = await this.competencesService.updateComp(id, updateCompetenceDto);
     return {
       statusCode: 200,
       message: 'Votre compétence a été mise à jour',
       data: update,
     };
   }
+
+
 
   /**
    * @method deleteComp:
@@ -144,15 +145,15 @@ export class CompetencesController {
     summary: "Suppression d'une compétence_clé sur CV utilisateur",
   })
   async deleteComp(@Param('id', ParseIntPipe) id: number, @Request() req) {
-    const competence = await this.competencesService.findCompetenceById(id);
-
+    const competence = await this.competencesService.findCompetenceById(id, req.user.id);
     if (!competence) {
       throw new HttpException('Competence introuvable.', HttpStatus.NOT_FOUND);
     }
-
-    if (await this.competencesService.deleteComp(id)) {
-      throw new HttpException('Compétence supprimée.', HttpStatus.OK);
+    const response = await this.competencesService.deleteComp(id);
+    return {
+      statusCode: 200,
+      message: "Votre compétence a été supprimée",
+      data: response,
     }
-    throw new HttpException('Suppression impossible.', HttpStatus.BAD_REQUEST);
   }
 }

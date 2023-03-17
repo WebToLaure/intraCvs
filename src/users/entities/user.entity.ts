@@ -131,6 +131,6 @@ export class User extends BaseEntity {
 
     @ApiProperty({ type: () => Technique })
     @OneToMany(() => Technique, (technique) => technique.user, { eager: true })
-    techniques: Fonctionnelle[]
+    techniques: Technique[]
 
 }

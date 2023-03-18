@@ -6,10 +6,10 @@ import { CentresInteret } from './entities/centres_interet.entity';
 @Injectable()
 export class CentresInteretsService {
   async createInteret(createCentresInteretDto: CreateCentresInteretDto, user: User) {
-    const Interets = CentresInteret.create({ ...createCentresInteretDto });
+    const interets = CentresInteret.create({ ...createCentresInteretDto });
     delete user.password;
-    Interets.user = user;
-    return await Interets.save()
+    interets.user = user;
+    return await interets.save()
   }
 
   async findAllInterets(): Promise<CentresInteret[]> {

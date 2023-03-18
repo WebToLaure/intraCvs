@@ -19,7 +19,7 @@ export class FormationsController {
   @ApiOperation({ summary: "Ajout d'une formation sur CV utilisateur" })
   async createFormation(@Body() createFormationDto: CreateFormationDto, @Request() req) {
 
-    if (await this.formationsService.findByFormationAndUser(req.user.id, createFormationDto.specialite)) {
+    if (await this.formationsService.findByFormationAndUser(req.user.id, createFormationDto.diplôme)) {
 
       throw new HttpException("Formation déjà renseignée", HttpStatus.BAD_REQUEST);
     }
@@ -73,8 +73,8 @@ export class FormationsController {
   @UseGuards(JwtAuthGuard)
   @Get('specialite/:name')
   @ApiOperation({ summary: "Récupération d'une formation par son nom " })
-  async findFormationByName(@Param('name') specialite: string) {
-    const formation = await this.formationsService.findFormationByName(specialite);
+  async findFormationByName(@Param('name') diplôme: string) {
+    const formation = await this.formationsService.findFormationByName(diplôme);
     if (!formation) {
       throw new HttpException("Aucune formation trouvée", HttpStatus.NOT_FOUND);
     }
@@ -89,7 +89,7 @@ export class FormationsController {
   @Patch(':id')
   @ApiOperation({ summary: "Modification d'une Formation du CV utilisateur" })
   async updateFormation(@Param('id') id: string, @Body() updateFormationDto: UpdateFormationDto, @Request() req) {
-    if (await this.formationsService.findByFormationAndUser(req.user.id, updateFormationDto.specialite)) {
+    if (await this.formationsService.findByFormationAndUser(req.user.id, updateFormationDto.diplôme)) {
       throw new HttpException("Formation déjà existante.", HttpStatus.BAD_REQUEST);
     }
     const update = await this.formationsService.update(+id, updateFormationDto);

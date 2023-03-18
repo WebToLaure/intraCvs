@@ -16,7 +16,7 @@ export class Formation extends BaseEntity {
     @Column({
         nullable: true,
     })
-    specialite: string;
+    lieu_formation: string;
 
     @ApiProperty()
     @Column({

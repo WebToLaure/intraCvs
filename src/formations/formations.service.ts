@@ -39,8 +39,8 @@ export class FormationsService {
     return (await Formation.delete({ id })).affected;;
   }
 
-  async findFormationByName(specialite: string) {
-    const findForm = await Formation.findBy({ specialite: ILike(`%${specialite}%`) });
+  async findFormationByName(diplôme: string) {
+    const findForm = await Formation.findBy({ lieu_formation: ILike(`%${diplôme}%`) });
     if (findForm.length === 0) {
       return undefined
     }
@@ -48,8 +48,8 @@ export class FormationsService {
   }
 
 
-  async findByFormationAndUser(userId: number, specialite: string) {
-    return await Formation.findOne({ where: { user: { id: userId }, specialite: specialite } });
+  async findByFormationAndUser(userId: number, diplôme: string) {
+    return await Formation.findOne({ where: { user: { id: userId }, lieu_formation: diplôme } });
   }
 
 }

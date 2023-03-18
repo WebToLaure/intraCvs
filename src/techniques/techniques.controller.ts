@@ -35,7 +35,12 @@ export class TechniquesController {
       throw new HttpException("Cette compétence technique existe déjà.", HttpStatus.BAD_REQUEST);
     }
 
-    return await this.techniquesService.createCompTech(createTechniqueDto, req.user);
+    const response = await this.techniquesService.createCompTech(createTechniqueDto, req.user);
+    return {
+      statusCode: 201,
+      data: response,
+      message: "Compétence technique ajoutée"
+    }
   }
 
   /** 
@@ -47,7 +52,15 @@ export class TechniquesController {
   @Get()
   @ApiOperation({ summary: "Recherche des compétences techniques sur CV utilisateurs" })
   async findAllCompTech() {
-    return await this.techniquesService.findAllCompTech();
+    const allTech = await this.techniquesService.findAllCompTech();
+    if (!allTech) {
+      throw new HttpException("aucun Centre d'intérêt trouvé", HttpStatus.NOT_FOUND);
+    }
+    return {
+      statusCode: 200,
+      data: allTech,
+      message: "Ensemble des centres d'intérêts de votre cv"
+    }
   }
 
   /** 
@@ -58,8 +71,16 @@ export class TechniquesController {
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   @ApiOperation({ summary: "Recherche d'une compétence technique sur CV par id" })
-  findCompTechById(@Param('id', ParseIntPipe) id: number) {
-    return this.techniquesService.findCompTechById(id);
+  async findCompTechById(@Param('id', ParseIntPipe) id: number) {
+    const response = await this.techniquesService.findCompTechById(id);
+    if (!response) {
+      throw new HttpException("Cette compétence technique n'existe pas", HttpStatus.NOT_FOUND);
+    }
+    return {
+      statusCode: 200,
+      data: response,
+      message: "Votre formation"
+    }
   }
 
   /** 
@@ -100,13 +121,18 @@ export class TechniquesController {
     const competence = await this.techniquesService.findCompTechById(id);
     if (!competence) {
 
-      throw new HttpException("Competence introuvable.", HttpStatus.NOT_FOUND);
+      throw new HttpException("Compétence introuvable.", HttpStatus.NOT_FOUND);
     }
-    if (await this.techniquesService.deleteCompTech(id)) {
 
-      throw new HttpException("Compétence technique supprimée.", HttpStatus.OK);
+    const response = await this.techniquesService.deleteCompTech(id)
+
+    return {
+      statusCode: 200,
+      message: "Cette compétence a bien été supprimée",
+      data: response,
     }
-    throw new HttpException("Suppression impossible.", HttpStatus.BAD_REQUEST);
   }
 
 }
+
+

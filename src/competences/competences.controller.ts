@@ -127,8 +127,9 @@ export class CompetencesController {
     const update = await this.competencesService.updateComp(id, updateCompetenceDto);
     return {
       statusCode: 200,
-      message: 'Votre compétence a été mise à jour',
       data: update,
+      message: 'Votre compétence a été mise à jour'
+     
     };
   }
 
@@ -149,11 +150,12 @@ export class CompetencesController {
     if (!competence) {
       throw new HttpException('Competence introuvable.', HttpStatus.NOT_FOUND);
     }
-    const response = await this.competencesService.deleteComp(id);
+    const deleteCompetence = await this.competencesService.deleteComp(id);
     return {
       statusCode: 200,
-      message: "Votre compétence a été supprimée",
-      data: response,
+      data: deleteCompetence,
+      message: "Votre compétence a été supprimée"
+     
     }
   }
 }

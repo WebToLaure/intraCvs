@@ -8,6 +8,7 @@ import { AdminGuard } from 'src/auth/admin.guard';
 import { UserGuard } from 'src/auth/user.guard';
 import { User } from 'src/users/entities/user.entity';
 import { UserRoleEnum } from 'src/enum/user-role.enum';
+import { ApiTags, ApiBody, ApiOperation } from '@nestjs/swagger';
 import { ConsultantGuard } from 'src/auth/consultant.guard';
 
 /**
@@ -17,6 +18,7 @@ import { ConsultantGuard } from 'src/auth/consultant.guard';
  * * De contrôler les informations entrantes, de les vérifier avant de les envoyer en base de données, suivant un protocole précis et renseigné.
  * * Celle-ci est dédiée à la création des présentations, à la recherche via des critères, à la modifification / maj de données et à la suppression d'une présentation.
  */
+@ApiTags('PRESENTATIONS')
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('presentations')
 export class PresentationsController {
@@ -32,8 +34,10 @@ export class PresentationsController {
    * * Vérifier et imposer que les contraintes soient bien respectées.
    * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
    */
+  @ApiBody({ type: CreatePresentationDto })
   @UseGuards(JwtAuthGuard)
   @Post()
+  @ApiOperation({ summary: "Création d'une présentation utilisateur" })
   async create(@Body() createPresentationDto: CreatePresentationDto, @Req() req) {
 
     if (req.user.presentation) {
@@ -59,6 +63,7 @@ export class PresentationsController {
   */
   @UseGuards(JwtAuthGuard, ConsultantGuard)
   @Get()
+  @ApiOperation({ summary: "Recherche des présentations utilisateurs" })
   async findAll() {
     const presentationExist = await this.presentationsService.findAllPresentation();
 
@@ -78,6 +83,7 @@ export class PresentationsController {
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
   */
   @Get(':id')
+  @ApiOperation({ summary: "Recherche d'une présentation par id" })
   async findOne(@Param('id') id: string) {
 
     const presentationById = await this.presentationsService.findPresentationById(+id);
@@ -103,6 +109,7 @@ export class PresentationsController {
   */
   @UseGuards(JwtAuthGuard)
   @Patch()
+  @ApiOperation({ summary: "Modification d'une présentation par son utilisateur" })
   async updatePresentation(@Body() updatePresentationDto: UpdatePresentationDto, @Req() req) {
 
     if (req.user.presentation == null) { // condition permettant de savoir si la présentation de l'user est null ou si elle existe
@@ -128,6 +135,7 @@ export class PresentationsController {
 
 /*   @UseGuards(JwtAuthGuard)
   @Delete()
+   @ApiOperation({ summary: "Suppression d'une présentation utilisateur" })
   async deletedPresentation(@Req() req) {
 
     const userLog = req.user.id

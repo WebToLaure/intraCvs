@@ -1,5 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, UseGuards, Request, HttpException, HttpStatus, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, UseInterceptors, UseGuards,Request, HttpException, HttpStatus, ParseIntPipe } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ConsultantGuard} from 'src/auth/consultant.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
+import { UserGuard } from 'src/auth/user.guard';
 import { ApiBody, ApiTags, ApiOperation } from '@nestjs/swagger';
 import { CentresInteretsService } from './centres_interets.service';
 import { CreateCentresInteretDto } from './dto/create-centres_interet.dto';
@@ -7,7 +10,7 @@ import { UpdateCentresInteretDto } from './dto/update-centres_interet.dto';
 import { UsersService } from 'src/users/users.service';
 
 
-@ApiTags("INTERETS")
+@ApiTags("CENTRES D'INTERETS")
 @Controller('Interets')
 @UseInterceptors(ClassSerializerInterceptor)
 export class CentresInteretsController {
@@ -16,7 +19,7 @@ export class CentresInteretsController {
 
 
   @ApiBody({ type: CreateCentresInteretDto })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard,UserGuard)
   @Post()
   @ApiOperation({ summary: "Ajout d'un centre d'intérêt sur compte utilisateur" })
   async createInteret(@Body() createCentresInteretDto: CreateCentresInteretDto, @Request() req) {

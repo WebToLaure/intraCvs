@@ -16,7 +16,7 @@ import { ConsultantGuard } from 'src/auth/consultant.guard';
  * * De contrôler les informations entrantes, de les vérifier avant de les envoyer en base de données, suivant un protocole précis et renseigné.
  * * Celle-ci est dédiée à la création des compétences fonctionnelles, à la recherche via des critères, à la modifification / maj de données.
  */
-@ApiTags('FONCTIONNELLES')
+@ApiTags('COMPETENCES FONCTIONNELLES')
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('fonctionnelles')
 export class FonctionnellesController {
@@ -58,8 +58,12 @@ export class FonctionnellesController {
     if (!fonctionnelleExist) {
       throw new HttpException("Pas de compétence fonctionnelle créée", HttpStatus.NOT_FOUND);
     }
-
-    return fonctionnelleExist;
+    return {
+      statusCode: 200,
+      data: fonctionnelleExist,
+      message: "Ensemble des Compétences Fonctionnelles "
+    }
+   
   }
 
   /** 
@@ -81,7 +85,7 @@ export class FonctionnellesController {
     return {
       statusCode: 200,
       data: fonctionnelleExist,
-      message: "Voici votre compétence fonctionnelle"
+      message: "Compétence fonctionnelle"
     }
   }
 
@@ -107,7 +111,7 @@ export class FonctionnellesController {
     const updatedCompetence = await this.fonctionnellesService.updateFonctionnelle(+id, updateFonctionnelleDto);
     
     return {
-      statusCode: 201,
+      statusCode: 200,
       data: updatedCompetence,
       message: "Compétence Fonctionnelle modifiée"
     }
@@ -129,10 +133,10 @@ export class FonctionnellesController {
     if (!existFonctionnelle) {
       throw new HttpException("Compétence Fonctionnelle n'existe pas", HttpStatus.FORBIDDEN)
     }
-    const deletedPresentation = await this.fonctionnellesService.deletePresentation(id);
+    const deletedFonctionnelle = await this.fonctionnellesService.deletedFonctionnelle(id);
     return {
-      statusCode: 201,
-      data: deletedPresentation,
+      statusCode: 200,
+      data: deletedFonctionnelle,
       message: "La Compétence Fonctionnelle a été supprimée",
     };
   }

@@ -98,7 +98,7 @@ export class FonctionnellesController {
   * * L'user doit être loger pour modifier ses compétencs fonctionnelles.
   */
   @UseGuards(JwtAuthGuard)
-  @Patch('update/:id')
+  @Patch(':id')
   async update(
     @Param('id') id: number, @Body() updateFonctionnelleDto: UpdateFonctionnelleDto, @Req() req) {
     

@@ -30,16 +30,17 @@ export class CompetencesService {
   * @method findAllCompetences:
   * * Methode permettant de rechercher toutes les compétences sur CV utilisateurs(roles consultant et admin).
   */
-  async findAllCompetences(): Promise<Competence[]> {
-    return await Competence.find();
+  async findAllCompetences(id: number): Promise<Competence[]> {
+    return await Competence.find({ where: { user: { id: id } } });
   }
 
   /** 
   * @method findCompetenceById :
   * * Methode permettant de rechercher une compétence par son id .
   */
-  async findCompetenceById(id: number) {
+  async findCompetenceById(id: number, user: User) {
     const competence = await Competence.findOne({ relations: { user: true }, where: { id } })
+    delete user.password
     if (!competence) {
       return undefined;
     }

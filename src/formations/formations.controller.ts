@@ -88,7 +88,7 @@ export class FormationsController {
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiOperation({ summary: "Modification d'une Formation du CV utilisateur" })
-  async updateFormation(@Param('id') id: string, @Body() updateFormationDto: UpdateFormationDto, @Request() req) {
+  async updateFormation(@Param('id', ParseIntPipe) id: number, @Body() updateFormationDto: UpdateFormationDto, @Request() req) {
     if (await this.formationsService.findByFormationAndUser(req.user.id, updateFormationDto.diplôme)) {
       throw new HttpException("Formation déjà existante.", HttpStatus.BAD_REQUEST);
     }

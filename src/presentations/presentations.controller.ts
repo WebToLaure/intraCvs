@@ -107,7 +107,7 @@ export class PresentationsController {
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
   * * L'user doit être loger pour modifier sa présentation.
   */
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, UseGuards)
   @Patch()
   @ApiOperation({ summary: "Modification d'une présentation par son utilisateur" })
   async updatePresentation(@Body() updatePresentationDto: UpdatePresentationDto, @Req() req) {

@@ -32,7 +32,10 @@ export class FormationsService {
     if (!formation) {
       return undefined
     }
-    return await Formation.update(+id, updateFormationDto);
+    formation.date_obtention = updateFormationDto.date_obtention;
+    formation.diplôme = updateFormationDto.diplôme;
+    formation.lieu_formation = updateFormationDto.lieu_formation;
+    return await formation.save(); //.update(+id, updateFormationDto);
   }
 
   async deleteFormation(id: number) {

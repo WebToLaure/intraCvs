@@ -49,7 +49,7 @@ export class FormationsService {
 
 
   async findByFormationAndUser(userId: number, diplôme: string) {
-    return await Formation.findOne({ where: { user: { id: userId }, lieu_formation: diplôme } });
+    return await Formation.findOne({ where: { user: { id: userId }, diplôme: diplôme } });
   }
 
 }

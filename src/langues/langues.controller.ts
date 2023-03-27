@@ -25,7 +25,7 @@ export class LanguesController
   async create(@Body() createLangueDto: CreateLangueDto, @Request() req)
   {
     // Vérifier si la langue existe déjà pour le user
-    const languageExist = await this.languesService.findByLanguageAndUser(req.user.userId, createLangueDto.langue);
+    const languageExist = await this.languesService.findByLanguageAndUser(req.user.id, createLangueDto.langue);
 
     if (languageExist)
     {

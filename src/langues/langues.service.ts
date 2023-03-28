@@ -19,7 +19,7 @@ export class LanguesService {
 
   // Créer une langue dans la BDD
   async create(createLangueDto: CreateLangueDto, user: User) {
-    const newLanguage = await Langue.create({...createLangueDto});
+    const newLanguage = Langue.create({...createLangueDto});
     delete user.password
     newLanguage.user = user;
     

@@ -10,6 +10,15 @@ import { UpdateCentresInteretDto } from './dto/update-centres_interet.dto';
 import { UsersService } from 'src/users/users.service';
 
 
+
+/**
+ * @class CentresInteretsController :
+ * 
+ * Une class permettant :
+ * * De réunir plusieurs méthodes CRUD liées à la partie centres d'intérêts du CV.
+ * * De contrôler les informations entrantes, de les vérifier avant de les envoyer en base de données, suivant un protocole précis et renseigné.
+ * * Celle-ci est dédiée à la création des centres d'intérêts, à la recherche via des critères, à la modifification / maj de données.
+ */
 @ApiTags("CENTRES D'INTERETS")
 @Controller('interets')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -18,6 +27,14 @@ export class CentresInteretsController {
     private readonly usersService: UsersService) { }
 
 
+  /** 
+     * @method createInteret :
+     * 
+     * Une méthode permettant de :
+     * * Controler les données entrantes lors de la création d'un centre d'intérêt.
+     * * Vérifier et imposer que les contraintes soient bien respectées.
+     * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
+     */
   @ApiBody({ type: CreateCentresInteretDto })
   @UseGuards(JwtAuthGuard, UserGuard)
   @Post()
@@ -34,6 +51,14 @@ export class CentresInteretsController {
     }
   }
 
+
+  /** 
+    * @method findAllInterets :
+    * 
+    * Une méthode permettant de :
+    * * Controler les données entrantes lors de la consultation de tous ses centres d'intérêts.
+    * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
+    */
   @ApiBody({ type: CreateCentresInteretDto })
   @UseGuards(JwtAuthGuard)
   @Get()
@@ -53,7 +78,13 @@ export class CentresInteretsController {
   }
 
 
-
+  /** 
+    * @method findInteretById :
+    * 
+    * Une méthode permettant de :
+    * * Controler les données entrantes lors de la consultation d'un centre d'intérêt par son Id.
+    * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
+    */
   @Get(':id')
   @ApiOperation({ summary: "Récupération d'un Centre d'intérêt utilisateur par son id" })
   async findInteretById(@Param('id', ParseIntPipe) id: number) {
@@ -68,6 +99,15 @@ export class CentresInteretsController {
     }
   }
 
+
+  /** 
+  * @method updateInteret :
+  * 
+  * Une méthode permettant de :
+  * * Controler les données entrantes lors de la modification d'un centre d'intérêt.
+  * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
+  * * L'user doit être connecté pour modifier ses centres d'intérêts.
+  */
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @ApiOperation({ summary: "Modification d'un Centre d'Intérêt " })
@@ -84,6 +124,15 @@ export class CentresInteretsController {
     }
   }
 
+
+  /** 
+  * @method deleteInteret :
+  * 
+  * Une méthode permettant de :
+  * * Controler les données entrantes lors de la suppression d'un centre d'intérêt'.
+  * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
+  * * Le développeur doit être connecté pour pouvoir supprimer son centre d'intérêt.
+  */
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @ApiOperation({ summary: "Suppression d'un Centre d'intérêt" })

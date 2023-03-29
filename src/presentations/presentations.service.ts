@@ -58,11 +58,3 @@ export class PresentationsService {
   }
 
 }
-
-/* async deletePresentation(id: number) { 
-
-  const presentation = await Presentation.findOneBy({id}); // const permettant de retrouver une présentation par son id
-  return await presentation.remove();
-  //return await Presentation.delete({ id });
-  // return presentation
-} */

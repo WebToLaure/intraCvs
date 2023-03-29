@@ -128,34 +128,3 @@ export class PresentationsController {
 }
 
 
-
-
-
-
-
-/*   @UseGuards(JwtAuthGuard)
-  @Delete()
-   @ApiOperation({ summary: "Suppression d'une présentation utilisateur" })
-  async deletedPresentation(@Req() req) {
-
-    const userLog = req.user.id
-    const user = await this.usersService.findOne(userLog);
-
-    // check user presentation
-    if (user.presentation == null) { // condition permettant de savoir si la présentation de l'user est null ou si elle existe
-      throw new HttpException("Vous n'avez pas de presentation", HttpStatus.FORBIDDEN)
-    }
-
-    const id = user.presentation.id
-    user.presentation = null;
-    await user.save()
-
-    const deleted = await this.presentationsService.deletePresentation(id);
-
-    if (!deleted) {
-      throw new HttpException('Erreur Server', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    return { message: `La présentation a bien été supprimée` };
-  } */
-
